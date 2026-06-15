@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediInfo CR - Inicio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Barra de navegación entre páginas -->
+  <nav>
+    <a href="index.html" class="logo">💊 MediInfo CR</a>
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="buscar.html">Buscar medicamento</a></li>
+      <li><a href="mis-medicamentos.html">Mis medicamentos</a></li>
+    </ul>
+  </nav>
+
+  <!-- Sección principal con título y descripción del proyecto -->
+  <div class="contenedor">
+
+    <div class="hero">
+      <div class="hero-chip">🏥 Info educativa + ubicación útil</div>
+      <h1>MediInfo CR</h1>
+      <p>
+        Guía web educativa sobre medicamentos comunes en Costa Rica.
+        Consulta información organizada, busca por nombre o categoría
+        y lleva un registro personal de tus medicamentos.
+      </p>
+      <div class="hero-badges">
+        <span>💊 Medicamentos</span>
+        <span>📋 Lista personal</span>
+        <span>📍 EBAIS cercanos</span>
+      </div>
+      <!-- Botones de navegación hacia las otras páginas -->
+      <div class="hero-botones">
+        <a href="buscar.html" class="btn">🔍 Buscar medicamento</a>
+        <a href="mis-medicamentos.html" class="btn btn-secundario">📋 Mis medicamentos</a>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <strong>📚</strong>
+        <span>Información clara y ordenada</span>
+      </div>
+      <div class="stat-card">
+        <strong>📝</strong>
+        <span>Registro personal en tu navegador</span>
+      </div>
+      <div class="stat-card">
+        <strong>📍</strong>
+        <span>Búsqueda útil de EBAIS cercanos</span>
+      </div>
+    </div>
+
+    <!-- Aviso de uso responsable -->
+    <div class="aviso">
+      ⚠️ <strong>Aviso importante:</strong> MediInfo CR tiene fines únicamente educativos.
+      La información presentada no sustituye la orientación de un médico, farmacéutico
+      u otro profesional de salud. Ante cualquier duda médica, consulta siempre a un profesional autorizado.
+    </div>
+
+    <div class="tarjeta-info mapa-ebais">
+      <div class="mapa-ebais-texto">
+        <h2>📍 Encontrar un EBAIS cercano</h2>
+        <p>
+          Escribí tu cantón, distrito o una dirección aproximada y abrí el mapa para ver
+          puntos de atención cercanos en Costa Rica.
+        </p>
+
+        <div class="mini-lista">
+          <div>✅ Buscá por zona o barrio</div>
+          <div>✅ Usá tu ubicación si querés algo más rápido</div>
+          <div>✅ Abrí rutas y resultados cercanos en el mapa</div>
+        </div>
+
+        <div class="mapa-controles">
+          <input
+            type="text"
+            id="ubicacion-ebais"
+            placeholder="Ej: San José centro, Cartago, Heredia..."
+          />
+          <button class="btn" type="button" onclick="buscarEbais()">🔎 Ver mapa</button>
+          <button class="btn btn-secundario" type="button" onclick="usarMiUbicacion()">📍 Usar mi ubicación</button>
+        </div>
+
+        <p class="nota-mapa">
+          Si querés una búsqueda directa, también podés usar el mapa para ver rutas y resultados cercanos.
+        </p>
+      </div>
+
+      <div class="mapa-ebais-frame">
+        <iframe
+          title="Mapa de búsqueda de EBAIS en Costa Rica"
+          src="https://www.google.com/maps?q=EBAIS%20Costa%20Rica&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+    </div>
+
+    <!-- Tarjetas que explican qué puede hacer el usuario en el sistema -->
+    <div class="seccion-header">
+      <h2>¿Qué podés hacer en MediInfo CR?</h2>
+      <p>Todo está pensado para que encuentres lo importante en pocos clics.</p>
+    </div>
+    <div class="tarjetas-info">
+
+      <div class="tarjeta-info">
+        <div class="icono">🔍</div>
+        <h3>Buscar medicamentos</h3>
+        <p>
+          Consultá información educativa sobre medicamentos comunes.
+          Buscá por nombre o filtrá por categoría para encontrar lo que necesitás.
+        </p>
+        <br />
+        <a href="buscar.html" class="btn">Ir a buscar</a>
+      </div>
+
+      <div class="tarjeta-info">
+        <div class="icono">📋</div>
+        <h3>Guardar tu lista personal</h3>
+        <p>
+          Registrá los medicamentos que estás usando. Podés agregar el horario,
+          motivo de uso y notas. La información se guarda en tu navegador.
+        </p>
+        <br />
+        <a href="mis-medicamentos.html" class="btn">Ir a mis medicamentos</a>
+      </div>
+
+      <div class="tarjeta-info">
+        <div class="icono">💡</div>
+        <h3>Información organizada</h3>
+        <p>
+          Cada medicamento tiene una ficha con uso general, advertencias,
+          efectos secundarios, contraindicaciones e información de uso seguro.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Sección que explica el problema que resuelve el proyecto -->
+    <div class="tarjeta-info proyecto-grid">
+      <div>
+        <h2>¿Por qué existe este proyecto?</h2>
+        <p>
+          Muchas personas en Costa Rica reciben medicamentos en hospitales, Ebáis, clínicas
+          o farmacias, pero no siempre comprenden completamente para qué sirven, qué efectos
+          secundarios pueden tener o qué cuidados deben tener.
+        </p>
+        <p>
+          Esta falta de información puede generar confusión, uso incorrecto de medicamentos,
+          automedicación o abandono de tratamientos.
+        </p>
+      </div>
+      <div class="proyecto-destacado">
+        <h3>🎯 Lo que buscamos</h3>
+        <p>
+          <strong>MediInfo CR</strong> nace para ofrecer información básica, clara y organizada
+          sobre medicamentos comunes, promoviendo un uso más responsable y consciente.
+        </p>
+        <div class="mini-lista">
+          <div>💙 Entender mejor lo que te recetaron</div>
+          <div>💙 Guardar tu lista personal</div>
+          <div>💙 Encontrar apoyo cerca de vos</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Pie de página -->
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="footer-logo">💊 MediInfo CR</a>
+        <p>Proyecto educativo para consultar medicamentos, organizar tu lista personal y ubicar apoyo cercano.</p>
+      </div>
+      <div>
+        <h4>Accesos rápidos</h4>
+        <a href="buscar.html">Buscar medicamento</a>
+        <a href="mis-medicamentos.html">Mis medicamentos</a>
+        <a href="privacidad-uso.html">Privacidad y uso</a>
+      </div>
+      <div>
+        <h4>Aviso</h4>
+        <p>La información es orientativa y no reemplaza la valoración de un profesional de salud.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 MediInfo CR</span>
+      <span>ISW-521 Programación en Ambiente Web I</span>
+      <span>Hecho para aprender y organizar mejor la información de salud.</span>
+    </div>
+  </footer>
+
+  <script src="index.js"></script>
+
+</body>
+</html>
