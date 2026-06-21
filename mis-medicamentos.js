@@ -1,164 +1,283 @@
-// ===== mis-medicamentos.js =====
-// Este archivo maneja la página de gestión personal.
-// Guarda, recupera y elimina medicamentos usando localStorage.
-
-// La clave que uso para guardar la lista en localStorage
-// Es como un "nombre" para identificar los datos
 const CLAVE_STORAGE = "mediinfo_mis_medicamentos";
+const get = (id) => document.getElementById(id);
+let editandoId = null;
 
-// Cuando la página carga, leo lo que hay en localStorage y lo muestro
-window.onload = function () {
-  // Verifico si llegó un medicamento precargado desde la página de búsqueda
-  let precargado = localStorage.getItem("medicamento_precargado");
-  if (precargado) {
-    // Si hay uno, lo pongo en el campo del formulario
-    document.getElementById("nombre").value = precargado;
-    // Lo elimino para que no aparezca la próxima vez
-    localStorage.removeItem("medicamento_precargado");
-  }
-
-  // Muestro los medicamentos que ya estaban guardados
+document.addEventListener("DOMContentLoaded", () => {
   mostrarMedicamentosGuardados();
-};
+  verificarPermisoNotificacion();
+  iniciarCheckerAlarmas();
+});
 
-// Esta función se llama cuando el usuario envía el formulario
-// El parámetro "evento" es necesario para evitar que la página se recargue
+/* ── Notificaciones ─────────────────────────────── */
+
+function verificarPermisoNotificacion() {
+  if (!("Notification" in window)) return;
+  const banner = get("notif-banner");
+  if (!banner) return;
+  if (Notification.permission === "default") {
+    banner.classList.add("visible");
+  }
+}
+
+function pedirPermisoNotificacion() {
+  if (!("Notification" in window)) return;
+  Notification.requestPermission().then((perm) => {
+    if (perm === "granted") {
+      get("notif-banner").classList.remove("visible");
+      new Notification("MediInfo CR", {
+        body: "Las notificaciones están activadas. Te avisaremos cuando sea hora de tu medicamento.",
+        icon: "assets/iconoMediCRcolores.png",
+      });
+    }
+  });
+}
+
+function dispararNotificacion(nombre, hora) {
+  if (Notification.permission !== "granted") return;
+  new Notification(`💊 Hora de tu medicamento`, {
+    body: `Hora de tomar ${nombre} — ${hora}`,
+    icon: "assets/iconoMediCRcolores.png",
+    badge: "assets/iconoMediCRcolores.png",
+  });
+}
+
+/* Revisa cada 30 segundos si alguna alarma coincide con HH:MM actual */
+function iniciarCheckerAlarmas() {
+  const fired = new Set();
+
+  setInterval(() => {
+    const ahora = new Date();
+    const hhmm = `${String(ahora.getHours()).padStart(2, "0")}:${String(ahora.getMinutes()).padStart(2, "0")}`;
+
+    obtenerLista()
+      .filter((m) => m.estado === "activo" && m.alarmas?.length)
+      .forEach((med) => {
+        med.alarmas.forEach((hora) => {
+          const key = `${med.id}-${hora}-${hhmm}`;
+          if (hora === hhmm && !fired.has(key)) {
+            fired.add(key);
+            dispararNotificacion(med.nombre, hora);
+          }
+        });
+      });
+  }, 30000);
+}
+
+/* ── Alarmas en formulario ──────────────────────── */
+
+function agregarAlarma() {
+  const slots = get("alarm-slots");
+  if (slots.children.length >= 3) return;
+  const div = document.createElement("div");
+  div.className = "alarm-slot";
+  div.innerHTML = `
+    <input type="time" class="alarm-time" />
+    <button type="button" class="alarm-remove-btn" onclick="quitarAlarma(this)" title="Quitar">×</button>
+  `;
+  slots.appendChild(div);
+}
+
+function quitarAlarma(btn) {
+  const slots = get("alarm-slots");
+  if (slots.children.length <= 1) {
+    btn.previousElementSibling.value = "";
+    return;
+  }
+  btn.parentElement.remove();
+}
+
+function obtenerAlarmasFormulario() {
+  return Array.from(document.querySelectorAll(".alarm-time"))
+    .map((i) => i.value.trim())
+    .filter(Boolean);
+}
+
+function limpiarAlarmasFormulario() {
+  const slots = get("alarm-slots");
+  slots.innerHTML = `
+    <div class="alarm-slot">
+      <input type="time" class="alarm-time" />
+      <button type="button" class="alarm-remove-btn" onclick="quitarAlarma(this)" title="Quitar">×</button>
+    </div>`;
+}
+
+/* ── CRUD ───────────────────────────────────────── */
+
 function guardarMedicamento(evento) {
-  // Prevengo el comportamiento por defecto del formulario (que recargaría la página)
   evento.preventDefault();
 
-  // Leo los valores de cada campo del formulario
-  let nombre = document.getElementById("nombre").value.trim();
-  let motivo = document.getElementById("motivo").value.trim();
-  let fechaInicio = document.getElementById("fecha-inicio").value;
-  let horario = document.getElementById("horario").value.trim();
-  let nota = document.getElementById("nota").value.trim();
-  let estado = document.getElementById("estado").value;
+  const nombre = get("nombre").value.trim();
+  const motivo = get("motivo").value.trim();
+  if (!nombre || !motivo) return;
 
-  // Creo un objeto con todos los datos del medicamento
-  // También le agrego un id único usando Date.now() para poder eliminarlo después
-  let nuevoMedicamento = {
-    id: Date.now(),
-    nombre: nombre,
-    motivo: motivo,
-    fechaInicio: fechaInicio,
-    horario: horario,
-    nota: nota,
-    estado: estado
+  const estado = document.querySelector('input[name="estado"]:checked')?.value || "activo";
+  const datos = {
+    nombre,
+    motivo,
+    fechaInicio: get("fecha-inicio").value,
+    horario: get("horario").value.trim(),
+    nota: get("nota").value.trim(),
+    estado,
+    alarmas: obtenerAlarmasFormulario(),
   };
 
-  // Traigo la lista que ya estaba guardada (o un arreglo vacío si no hay nada)
   let lista = obtenerLista();
 
-  // Agrego el nuevo medicamento al final de la lista
-  lista.push(nuevoMedicamento);
+  if (editandoId !== null) {
+    lista = lista.map((med) => med.id === editandoId ? { ...med, ...datos } : med);
+    editandoId = null;
+    get("edit-banner").style.display = "none";
+    get("form-medicamento").querySelector(".btn-guardar").textContent = "Guardar medicamento";
+  } else {
+    lista.unshift({ id: Date.now(), ...datos });
+  }
 
-  // Guardo la lista actualizada en localStorage
-  // Uso JSON.stringify para convertir el arreglo a texto (localStorage solo guarda texto)
-  localStorage.setItem(CLAVE_STORAGE, JSON.stringify(lista));
+  guardarLista(lista);
+  get("form-medicamento").reset();
+  document.getElementById("estado-activo").checked = true;
+  limpiarAlarmasFormulario();
 
-  // Limpio el formulario después de guardar
-  document.getElementById("form-medicamento").reset();
+  const msg = get("mensaje-guardado");
+  msg.style.display = "flex";
+  setTimeout(() => (msg.style.display = "none"), 3000);
 
-  // Muestro el mensaje de confirmación
-  let mensaje = document.getElementById("mensaje-guardado");
-  mensaje.style.display = "block";
-
-  // Lo oculto después de 3 segundos
-  setTimeout(function () {
-    mensaje.style.display = "none";
-  }, 3000);
-
-  // Actualizo la lista en pantalla
   mostrarMedicamentosGuardados();
 }
 
-// Recupera la lista desde localStorage y la devuelve como arreglo
-function obtenerLista() {
-  // Intento leer el valor guardado con la clave
-  let datos = localStorage.getItem(CLAVE_STORAGE);
+function editarMedicamento(id) {
+  const med = obtenerLista().find((m) => m.id === id);
+  if (!med) return;
 
-  // Si no hay nada guardado, devuelvo un arreglo vacío
-  if (datos === null) {
-    return [];
-  }
+  editandoId = id;
 
-  // Convierto el texto JSON de vuelta a un arreglo de objetos con JSON.parse
-  return JSON.parse(datos);
+  get("nombre").value = med.nombre;
+  get("motivo").value = med.motivo;
+  get("fecha-inicio").value = med.fechaInicio || "";
+  get("horario").value = med.horario || "";
+  get("nota").value = med.nota || "";
+
+  const estadoInput = document.querySelector(`input[name="estado"][value="${med.estado}"]`);
+  if (estadoInput) estadoInput.checked = true;
+
+  limpiarAlarmasFormulario();
+  (med.alarmas || []).forEach((hora, i) => {
+    if (i === 0) {
+      document.querySelector(".alarm-time").value = hora;
+    } else {
+      agregarAlarma();
+      const inputs = document.querySelectorAll(".alarm-time");
+      inputs[inputs.length - 1].value = hora;
+    }
+  });
+
+  get("edit-banner").style.display = "flex";
+  get("form-medicamento").querySelector(".btn-guardar").textContent = "Guardar cambios";
+  get("mismeds-form-panel")?.scrollIntoView({ behavior: "smooth" });
+  document.querySelector(".mismeds-form-panel").scrollIntoView({ behavior: "smooth" });
 }
 
-// Lee la lista del localStorage y genera las tarjetas en pantalla
-function mostrarMedicamentosGuardados() {
-  let contenedor = document.getElementById("lista-guardados");
-  let lista = obtenerLista();
+function cancelarEdicion() {
+  editandoId = null;
+  get("form-medicamento").reset();
+  document.getElementById("estado-activo").checked = true;
+  limpiarAlarmasFormulario();
+  get("edit-banner").style.display = "none";
+  get("form-medicamento").querySelector(".btn-guardar").textContent = "Guardar medicamento";
+}
 
-  // Si la lista está vacía, muestro un mensaje al usuario
+function obtenerLista() {
+  try {
+    return JSON.parse(localStorage.getItem(CLAVE_STORAGE) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function guardarLista(lista) {
+  localStorage.setItem(CLAVE_STORAGE, JSON.stringify(lista));
+}
+
+function mostrarMedicamentosGuardados() {
+  const contenedor = get("lista-guardados");
+  const lista = obtenerLista();
+
+  const countEl = get("diary-count");
+  if (countEl) countEl.textContent = `${lista.length} registro${lista.length !== 1 ? "s" : ""}`;
+
   if (lista.length === 0) {
-    contenedor.innerHTML =
-      '<p class="sin-guardados">No tenés medicamentos guardados todavía.</p>';
+    contenedor.innerHTML = `
+      <div class="diary-empty">
+        <div class="diary-empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <h3>Sin registros aún</h3>
+        <p>Agregá tu primer medicamento usando el formulario.</p>
+      </div>`;
     return;
   }
 
-  // Limpio el contenedor antes de volver a pintarlo
   contenedor.innerHTML = "";
-
-  // Recorro la lista y creo una tarjeta por cada medicamento guardado
-  lista.forEach(function (med) {
-    let item = document.createElement("div");
-
-    // Si el estado es "finalizado", le agrego una clase extra para estilizarlo diferente
-    item.className = "item-guardado" + (med.estado === "finalizado" ? " finalizado" : "");
-
-    // Construyo el badge de estado
-    let badgeClase = med.estado === "activo" ? "estado-activo" : "estado-finalizado";
-    let badgeTexto = med.estado === "activo" ? "Activo" : "Finalizado";
-
-    // Genero el HTML de la tarjeta con los datos del medicamento
-    item.innerHTML = `
-      <div class="item-guardado-info">
-        <h3>${med.nombre}</h3>
-        <span class="estado-badge ${badgeClase}">${badgeTexto}</span>
-        <p><strong>Motivo:</strong> ${med.motivo}</p>
-        ${med.fechaInicio ? `<p><strong>Inicio:</strong> ${formatearFecha(med.fechaInicio)}</p>` : ""}
-        ${med.horario ? `<p><strong>Horario:</strong> ${med.horario}</p>` : ""}
-        ${med.nota ? `<p><strong>Nota:</strong> ${med.nota}</p>` : ""}
-      </div>
-      <div>
-        <button class="btn btn-peligro" onclick="eliminarMedicamento(${med.id})">
-          🗑 Eliminar
-        </button>
-      </div>
-    `;
-
-    contenedor.appendChild(item);
-  });
+  lista.forEach((med) => contenedor.appendChild(crearDiaryCard(med)));
 }
 
-// Elimina un medicamento de la lista usando su id único
-function eliminarMedicamento(id) {
-  // Pido confirmación antes de borrar
-  let confirmar = confirm("¿Seguro que querés eliminar este medicamento?");
-  if (!confirmar) return;
+function crearDiaryCard(med) {
+  const card = document.createElement("div");
+  card.className = `diary-card${med.estado === "finalizado" ? " finalizado" : ""}`;
 
-  // Traigo la lista actual
-  let lista = obtenerLista();
+  const esActivo = med.estado === "activo";
+  const toggleLabel = esActivo ? "Marcar finalizado" : "Reactivar";
 
-  // Filtro la lista para quedarme con todos excepto el que tiene ese id
-  let listaActualizada = lista.filter(function (med) {
-    return med.id !== id;
+  const alarmasPills = (med.alarmas || [])
+    .map((h) => `<span class="diary-alarm-pill"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> ${h}</span>`)
+    .join("");
+
+  card.innerHTML = `
+    <div>
+      <div class="diary-card-name">${med.nombre}</div>
+      <div class="diary-card-badges">
+        <span class="diary-pill ${esActivo ? "diary-pill-activo" : "diary-pill-finalizado"}">
+          ${esActivo ? "Activo" : "Finalizado"}
+        </span>
+        ${med.fechaInicio ? `<span class="diary-pill">${formatearFecha(med.fechaInicio)}</span>` : ""}
+        ${med.horario ? `<span class="diary-pill">${med.horario}</span>` : ""}
+      </div>
+      <div class="diary-info-row">
+        <div class="diary-info-item">
+          <span>Motivo</span>
+          <span>${med.motivo}</span>
+        </div>
+        ${med.nota ? `
+        <div class="diary-info-item">
+          <span>Nota</span>
+          <span>${med.nota}</span>
+        </div>` : ""}
+      </div>
+      ${alarmasPills ? `<div class="diary-alarms">${alarmasPills}</div>` : ""}
+    </div>
+    <div class="diary-actions">
+      <button class="btn-toggle-estado" onclick="editarMedicamento(${med.id})">Editar</button>
+      <button class="btn-toggle-estado" onclick="toggleEstado(${med.id})">${toggleLabel}</button>
+      <button class="btn-eliminar" onclick="eliminarMedicamento(${med.id})">Eliminar</button>
+    </div>
+  `;
+
+  return card;
+}
+
+function toggleEstado(id) {
+  const lista = obtenerLista().map((med) => {
+    if (med.id === id) med.estado = med.estado === "activo" ? "finalizado" : "activo";
+    return med;
   });
-
-  // Guardo la lista sin ese medicamento
-  localStorage.setItem(CLAVE_STORAGE, JSON.stringify(listaActualizada));
-
-  // Actualizo la pantalla para reflejar el cambio
+  guardarLista(lista);
   mostrarMedicamentosGuardados();
 }
 
-// Formatea la fecha del input (viene como "2026-05-20") a un formato más legible
+function eliminarMedicamento(id) {
+  if (!confirm("¿Seguro que querés eliminar este medicamento?")) return;
+  guardarLista(obtenerLista().filter((med) => med.id !== id));
+  mostrarMedicamentosGuardados();
+}
+
 function formatearFecha(fechaStr) {
-  // Separo el año, mes y día
-  let partes = fechaStr.split("-");
-  // Devuelvo en formato dd/mm/yyyy
-  return partes[2] + "/" + partes[1] + "/" + partes[0];
+  const [anio, mes, dia] = fechaStr.split("-");
+  return `${dia}/${mes}/${anio}`;
 }

@@ -65,22 +65,34 @@ function mostrarMedicamentos(lista) {
   lista.forEach((med) => contenedor.appendChild(crearTarjetaMedicamento(med)));
 }
 
-// Crea una tarjeta visual con la información resumida del medicamento.
+const CATEGORIA_CONFIG = {
+  "Dolor y fiebre":  { color: "#FF6B6B", icon: "💊" },
+  "Antibióticos":    { color: "#4ECDC4", icon: "🦠" },
+  "Alergias":        { color: "#A78BFA", icon: "🌿" },
+  "Estómago":        { color: "#F59E0B", icon: "🫀" },
+  "Diabetes":        { color: "#34D399", icon: "🩸" },
+  "Piel":            { color: "#FB923C", icon: "🩹" },
+};
+
 function crearTarjetaMedicamento(med) {
   const tarjeta = document.createElement("div");
   tarjeta.className = "card-medicamento";
+  const resumenUso = recortarTexto(med.uso_general, 90);
+  const cfg = CATEGORIA_CONFIG[med.categoria] || { color: "#1D6FEB", icon: "💉" };
 
-  // Mostramos solo un resumen para que la lista no se vea muy larga.
+  tarjeta.style.setProperty("--cat-color", cfg.color);
+
   tarjeta.innerHTML = `
-    <span class="categoria-badge">${med.categoria}</span>
-    <h3>${med.nombre}</h3>
-    <p><em>${med.nombre_generico}</em></p>
-    <p>${med.uso_general.substring(0, 80)}...</p>
-    <br/>
-    <small style="color: #1a6eb5;">Clic para ver detalles →</small>
+    <div class="card-med-top">
+      <span class="card-med-icon">${cfg.icon}</span>
+      <span class="categoria-badge" style="background:${cfg.color}18;color:${cfg.color};border-color:${cfg.color}35">${med.categoria}</span>
+    </div>
+    <h3 class="card-med-nombre">${med.nombre}</h3>
+    <p class="card-med-generico">${med.nombre_generico}</p>
+    <p class="card-med-uso">${resumenUso}</p>
+    <span class="card-med-link">Ver detalles →</span>
   `;
 
-  // Al hacer clic, abrimos la ficha completa de ese medicamento.
   tarjeta.addEventListener("click", () => mostrarFicha(med));
   return tarjeta;
 }
@@ -98,7 +110,7 @@ function mostrarFicha(med) {
   get("ficha-presentaciones").textContent = med.presentaciones_comunes.join(", ");
   get("ficha-receta").textContent = med.requiere_receta;
   get("ficha-uso-seguro").textContent = med.uso_seguro;
-  get("ficha-nota").textContent = `⚠️ ${med.nota_importante}`;
+  get("ficha-nota").textContent = med.nota_importante;
 
   // Las listas se llenan con <li> usando la función reutilizable llenarLista().
   llenarLista("ficha-advertencias", med.advertencias);
@@ -152,7 +164,7 @@ function guardarDesdeBusqueda() {
   );
 
   if (yaExiste) {
-    alert("⚠️ Este medicamento ya está en tu lista personal.");
+    alert("Este medicamento ya está en tu lista personal.");
     return;
   }
 
@@ -169,6 +181,19 @@ function guardarDesdeBusqueda() {
 
   // Guardamos la lista actualizada y enviamos al usuario a la otra página.
   localStorage.setItem(KEY_MIS_MEDICAMENTOS, JSON.stringify(listaGuardada));
-  alert("✅ Medicamento guardado. Te llevamos a tu lista.");
+  alert("Medicamento guardado. Te llevamos a tu lista.");
   window.location.href = "mis-medicamentos.html";
+}
+
+function seleccionarChip(chip, categoria) {
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("chip-active"));
+  chip.classList.add("chip-active");
+  document.getElementById("filtro-categoria").value = categoria;
+  filtrarMedicamentos();
+}
+
+function recortarTexto(texto, maximo) {
+  if (!texto) return "";
+  if (texto.length <= maximo) return texto;
+  return `${texto.slice(0, maximo).trimEnd()}...`;
 }

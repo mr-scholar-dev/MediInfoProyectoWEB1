@@ -2,122 +2,622 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="assets/iconoMediCRcolores.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MediInfo CR - Mis medicamentos</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
+  <style>
+    /* ── Mis medicamentos layout ─────────────────────── */
 
-  <!-- Navegación -->
-  <nav>
-    <a href="index.html" class="logo">💊 MediInfo CR</a>
-    <ul>
-      <li><a href="index.html">Inicio</a></li>
-      <li><a href="buscar.html">Buscar medicamento</a></li>
-      <li><a href="mis-medicamentos.html">Mis medicamentos</a></li>
-    </ul>
-  </nav>
+    .mismeds-layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 28px;
+      align-items: start;
+      margin-top: 24px;
+    }
+
+    /* ── Formulario panel ────────────────────────────── */
+
+    .mismeds-form-panel {
+      position: sticky;
+      top: 80px;
+      padding: 28px 24px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(26,86,219,0.2);
+      background: linear-gradient(160deg, rgba(26,86,219,0.06) 0%, var(--surface) 60%);
+    }
+
+    .form-panel-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .form-panel-title-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(26,86,219,0.15);
+      border: 1px solid rgba(26,86,219,0.25);
+      color: var(--accent-light);
+      font-size: 1rem;
+    }
+
+    .form-panel-title h2 {
+      font-size: 1.3rem;
+      margin: 0;
+    }
+
+    .form-divider {
+      height: 1px;
+      background: var(--line);
+      margin: 18px 0;
+    }
+
+    .form-field-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 7px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: rgba(245,245,247,0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .form-field-label .req {
+      color: var(--accent-light);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: var(--radius-xs);
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      margin-bottom: 14px;
+    }
+
+    .form-input::placeholder {
+      color: rgba(245,245,247,0.3);
+    }
+
+    .form-input:focus {
+      border-color: rgba(26,86,219,0.5);
+      box-shadow: 0 0 0 3px rgba(26,86,219,0.1);
+    }
+
+    textarea.form-input {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .estado-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .estado-option {
+      position: relative;
+    }
+
+    .estado-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+    }
+
+    .estado-option label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 10px;
+      border-radius: var(--radius-xs);
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03);
+      color: rgba(245,245,247,0.6);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .estado-option input:checked + label {
+      border-color: var(--accent);
+      background: rgba(26,86,219,0.12);
+      color: var(--accent-light);
+    }
+
+    .btn-guardar {
+      width: 100%;
+      padding: 13px;
+      font-size: 1rem;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* ── Alarmas ─────────────────────────────────────── */
+
+    .alarm-section {
+      margin-bottom: 14px;
+    }
+
+    .alarm-slots {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .alarm-slot {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .alarm-slot input[type="time"] {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: var(--radius-xs);
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      color-scheme: dark;
+    }
+
+    .alarm-slot input[type="time"]:focus {
+      border-color: rgba(26,86,219,0.5);
+      box-shadow: 0 0 0 3px rgba(26,86,219,0.1);
+    }
+
+    .alarm-add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px dashed rgba(255,255,255,0.15);
+      background: transparent;
+      color: rgba(245,245,247,0.55);
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .alarm-add-btn:hover {
+      border-color: rgba(26,86,219,0.4);
+      color: var(--accent-light);
+    }
+
+    .alarm-remove-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,69,58,0.2);
+      background: transparent;
+      color: rgba(255,69,58,0.6);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.18s;
+      flex-shrink: 0;
+    }
+
+    .alarm-remove-btn:hover {
+      background: rgba(255,69,58,0.1);
+      color: #FF453A;
+    }
+
+    .notif-banner {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: var(--radius-xs);
+      border: 1px solid rgba(255,214,10,0.22);
+      background: rgba(255,214,10,0.07);
+      color: #FFD60A;
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      cursor: pointer;
+    }
+
+    .notif-banner.visible { display: flex; }
+
+    .diary-alarms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .diary-alarm-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,214,10,0.25);
+      background: rgba(255,214,10,0.07);
+      color: #FFD60A;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .form-success {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      padding: 11px 14px;
+      border-radius: var(--radius-xs);
+      border: 1px solid rgba(48,209,88,0.22);
+      background: rgba(48,209,88,0.08);
+      color: #30D158;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    /* ── Diario panel ─────────────────────────────────── */
+
+    .mismeds-diary {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .diary-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .diary-header h2 {
+      font-size: 1.4rem;
+      margin: 0;
+    }
+
+    .diary-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .diary-empty {
+      padding: 56px 24px;
+      text-align: center;
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: var(--radius-md);
+      color: var(--muted);
+    }
+
+    .diary-empty-icon {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 14px;
+    }
+
+    .diary-empty h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: rgba(245,245,247,0.6);
+    }
+
+    .diary-card {
+      padding: 20px 22px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      background: var(--surface);
+      transition: border-color 0.2s, transform 0.2s;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .diary-card:hover {
+      border-color: rgba(255,255,255,0.12);
+      transform: translateY(-1px);
+    }
+
+    .diary-card.finalizado {
+      opacity: 0.6;
+    }
+
+    .diary-card-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 6px;
+    }
+
+    .diary-card-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+
+    .diary-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: rgba(245,245,247,0.75);
+    }
+
+    .diary-pill-activo {
+      background: rgba(48,209,88,0.1);
+      border-color: rgba(48,209,88,0.22);
+      color: #30D158;
+    }
+
+    .diary-pill-finalizado {
+      background: rgba(255,255,255,0.05);
+      color: rgba(245,245,247,0.45);
+    }
+
+    .diary-info-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .diary-info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: rgba(245,245,247,0.72);
+    }
+
+    .diary-info-item span:first-child {
+      color: rgba(245,245,247,0.4);
+      min-width: 60px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 1px;
+    }
+
+    .diary-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .btn-toggle-estado {
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: rgba(245,245,247,0.7);
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s;
+    }
+
+    .btn-toggle-estado:hover {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+
+    .btn-eliminar {
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,69,58,0.2);
+      background: rgba(255,69,58,0.06);
+      color: rgba(255,69,58,0.8);
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s;
+    }
+
+    .btn-eliminar:hover {
+      background: rgba(255,69,58,0.14);
+      color: #FF453A;
+      border-color: rgba(255,69,58,0.35);
+    }
+
+    @media (max-width: 960px) {
+      .mismeds-layout {
+        grid-template-columns: 1fr;
+      }
+      .mismeds-form-panel {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body data-page="mis">
+  <div id="site-header"></div>
 
   <div class="contenedor">
 
-    <h1>Mis medicamentos</h1>
-    <p>Registrá los medicamentos que estás usando. La información se guarda en tu navegador y estará disponible aunque recargues la página.</p>
+    <div class="page-hero">
+      <div>
+        <div class="page-kicker">Tu espacio personal</div>
+        <h1>Mis medicamentos</h1>
+        <p>Registrá y seguí los medicamentos que estás usando. Todo se guarda localmente en tu navegador.</p>
+      </div>
+      <div class="page-tip">
+        <span>Privacidad local</span>
+        <p>Ningún dato sale de tu dispositivo. Podés editar o eliminar cada registro cuando quieras.</p>
+      </div>
+    </div>
 
     <div class="aviso">
-      ⚠️ Esta lista es personal y tiene fines de organización. No reemplaza las indicaciones de un profesional de salud.
+      Esta lista es personal y tiene fines de organización. No reemplaza las indicaciones de un profesional de salud.
     </div>
 
-    <!-- Formulario para registrar un medicamento nuevo -->
-    <div class="formulario-seccion">
-      <h2>Registrar medicamento</h2>
+    <div class="mismeds-layout">
 
-      <!-- Evento "submit": se activa cuando el usuario envía el formulario -->
-      <form id="form-medicamento" onsubmit="guardarMedicamento(event)">
-
-        <div class="form-grupo">
-          <label for="nombre">Nombre del medicamento *</label>
-          <input type="text" id="nombre" placeholder="Ej: Acetaminofén" required />
+      <!-- Formulario -->
+      <aside class="mismeds-form-panel">
+        <div class="form-panel-title">
+          <span class="form-panel-title-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </span>
+          <h2 id="form-panel-heading">Nuevo medicamento</h2>
         </div>
 
-        <div class="form-grupo">
-          <label for="motivo">Motivo de uso *</label>
-          <input type="text" id="motivo" placeholder="Ej: Dolor de cabeza" required />
+        <div id="edit-banner" style="display:none;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid rgba(26,86,219,0.3);background:rgba(26,86,219,0.08);color:#93BBFD;font-size:0.84rem;font-weight:600;margin-bottom:14px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Editando registro —
+          <button type="button" onclick="cancelarEdicion()" style="background:none;border:none;color:inherit;font-weight:700;cursor:pointer;text-decoration:underline;font-family:inherit;font-size:inherit;">Cancelar</button>
         </div>
 
-        <div class="form-grupo">
-          <label for="fecha-inicio">Fecha de inicio</label>
-          <input type="date" id="fecha-inicio" />
+        <form id="form-medicamento" onsubmit="guardarMedicamento(event)" novalidate>
+
+          <div class="form-field-label">Nombre <span class="req">*</span></div>
+          <input class="form-input" type="text" id="nombre" placeholder="Ej: Acetaminofén" required autocomplete="off" />
+
+          <div class="form-field-label">Motivo de uso <span class="req">*</span></div>
+          <input class="form-input" type="text" id="motivo" placeholder="Ej: Dolor de cabeza" required autocomplete="off" />
+
+          <div class="form-divider"></div>
+
+          <div class="form-row">
+            <div>
+              <div class="form-field-label">Fecha inicio</div>
+              <input class="form-input" type="date" id="fecha-inicio" />
+            </div>
+            <div>
+              <div class="form-field-label">Horario</div>
+              <input class="form-input" type="text" id="horario" placeholder="Ej: Cada 8h" />
+            </div>
+          </div>
+
+          <div class="form-field-label">Nota personal</div>
+          <textarea class="form-input" id="nota" placeholder="Ej: Tomar con agua, evitar alcohol..."></textarea>
+
+          <div class="form-divider"></div>
+
+          <div class="alarm-section">
+            <div class="form-field-label">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              Alarmas
+            </div>
+            <div id="notif-banner" class="notif-banner" onclick="pedirPermisoNotificacion()">
+              Activá notificaciones para recibir alertas
+            </div>
+            <div class="alarm-slots" id="alarm-slots">
+              <div class="alarm-slot">
+                <input type="time" class="alarm-time" />
+                <button type="button" class="alarm-remove-btn" onclick="quitarAlarma(this)" title="Quitar">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+            </div>
+            <button type="button" class="alarm-add-btn" onclick="agregarAlarma()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Agregar hora
+            </button>
+          </div>
+
+          <div class="form-field-label">Estado</div>
+          <div class="estado-toggle">
+            <div class="estado-option">
+              <input type="radio" id="estado-activo" name="estado" value="activo" checked />
+              <label for="estado-activo">Activo</label>
+            </div>
+            <div class="estado-option">
+              <input type="radio" id="estado-finalizado" name="estado" value="finalizado" />
+              <label for="estado-finalizado">Finalizado</label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-guardar" id="btn-guardar">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Guardar
+          </button>
+
+          <div class="form-success" id="mensaje-guardado">
+            Guardado correctamente
+          </div>
+
+        </form>
+      </aside>
+
+      <!-- Diario -->
+      <section>
+        <div class="diary-header">
+          <h2>Diario</h2>
+          <span class="diary-count" id="diary-count">0 registros</span>
         </div>
 
-        <div class="form-grupo">
-          <label for="horario">Horario indicado</label>
-          <input type="text" id="horario" placeholder="Ej: Cada 8 horas, después de comer" />
+        <div class="mismeds-diary" id="lista-guardados">
+          <div class="diary-empty">
+            <div class="diary-empty-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <h3>Sin registros aún</h3>
+            <p>Agregá tu primer medicamento usando el formulario.</p>
+          </div>
         </div>
-
-        <div class="form-grupo">
-          <label for="nota">Nota personal</label>
-          <textarea id="nota" placeholder="Ej: Tomarlo con mucha agua, evitar al conducir..."></textarea>
-        </div>
-
-        <div class="form-grupo">
-          <label for="estado">Estado</label>
-          <select id="estado">
-            <option value="activo">Activo</option>
-            <option value="finalizado">Finalizado</option>
-          </select>
-        </div>
-
-        <button type="submit" class="btn btn-verde">➕ Guardar medicamento</button>
-
-      </form>
-
-      <!-- Mensaje de confirmación, oculto hasta que el usuario guarda -->
-      <div class="mensaje-confirmacion" id="mensaje-guardado">
-        ✅ Medicamento guardado correctamente.
-      </div>
+      </section>
 
     </div>
-
-    <!-- Lista de medicamentos guardados en localStorage -->
-    <h2>Medicamentos guardados</h2>
-
-    <!-- JavaScript llena este div con los registros guardados -->
-    <div id="lista-guardados">
-      <p class="sin-guardados">No tenés medicamentos guardados todavía.</p>
-    </div>
-
   </div>
 
-  <!-- Pie de página -->
-  <footer class="site-footer">
-    <div class="footer-grid">
-      <div>
-        <a href="index.html" class="footer-logo">💊 MediInfo CR</a>
-        <p>Organizá tu lista personal de medicamentos de forma simple y rápida.</p>
-      </div>
-      <div>
-        <h4>Accesos rápidos</h4>
-        <a href="index.html">Inicio</a>
-        <a href="buscar.html">Buscar medicamento</a>
-        <a href="privacidad-uso.html">Privacidad y uso</a>
-      </div>
-      <div>
-        <h4>Aviso</h4>
-        <p>Esta lista es solo de apoyo personal y no reemplaza indicaciones médicas.</p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>&copy; 2026 MediInfo CR</span>
-      <span>ISW-521 Programación en Ambiente Web I</span>
-      <span>Tu información se guarda en el navegador del dispositivo.</span>
-    </div>
-  </footer>
+  <div id="site-footer"></div>
 
-  <!-- Conecto el archivo JavaScript que maneja el localStorage -->
+  <script src="shared-ui.js"></script>
   <script src="mis-medicamentos.js"></script>
-
 </body>
 </html>
