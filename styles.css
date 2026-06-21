@@ -111,27 +111,17 @@ nav {
   position: sticky;
   top: 0;
   z-index: 50;
-  isolation: isolate;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 16px;
   padding: 12px 24px;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid transparent;
+  background: rgba(0, 0, 0, 0.85);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-top: 3px solid #1A56DB;
   transition: background 0.3s ease, border-color 0.3s ease, padding 0.3s ease, box-shadow 0.3s ease;
-}
-
-nav::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #1A56DB 33%, #ffffff 33% 67%, #CE1126 67%);
-  z-index: -1;
 }
 
 nav.scrolled {
@@ -1124,7 +1114,7 @@ nav ul li a.active {
   background:
     radial-gradient(ellipse 80% 60% at 50% 100%, rgba(26, 86, 219, 0.12), transparent 70%),
     linear-gradient(180deg, #07080d 0%, #050610 100%);
-  border-top: 3px solid transparent;
+  border-top: 3px solid #CE1126;
   position: relative;
 }
 
