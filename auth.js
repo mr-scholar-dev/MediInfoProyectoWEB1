@@ -89,3 +89,15 @@ function iniciarSesion(usuario, clave) {
   iniciarSesionLocal(encontrado.usuario);
   return { ok: true, mensaje: `Bienvenido, ${encontrado.usuario}.` };
 }
+
+// Crea una cuenta de demostración (isaac / 1234) la primera vez que alguien
+// visita el sitio en un navegador nuevo, para que el login se pueda probar
+// de inmediato sin tener que registrarse primero (útil para la defensa técnica).
+(function sembrarUsuarioDemo() {
+  const usuarios = obtenerUsuarios();
+  const yaExiste = usuarios.some((u) => u.usuario.toLowerCase() === "isaac");
+  if (!yaExiste) {
+    usuarios.push({ usuario: "isaac", clave: "1234" });
+    guardarUsuarios(usuarios);
+  }
+})();
