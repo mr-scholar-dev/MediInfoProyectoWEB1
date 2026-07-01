@@ -13,7 +13,7 @@
 <body data-page="buscar">
   <div id="site-header"></div>
 
-  <div class="contenedor">
+  <main class="contenedor">
     <div class="page-hero">
       <div>
         <div class="page-kicker">Consulta rápida</div>
@@ -34,6 +34,7 @@
     <!-- Controles de búsqueda y filtro -->
     <div class="search-bar-wrapper">
       <div class="search-bar-input-wrap">
+        <label for="buscador" class="visually-hidden">Buscar medicamento por nombre</label>
         <svg class="search-bar-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input
           type="text"
@@ -56,6 +57,7 @@
       </div>
 
       <!-- Select oculto para mantener compatibilidad con filtrarMedicamentos() -->
+      <label for="filtro-categoria" class="visually-hidden">Filtrar por categoría</label>
       <select id="filtro-categoria" style="display:none" onchange="filtrarMedicamentos()">
         <option value="">Todas las categorías</option>
         <option value="Dolor y fiebre">Dolor y fiebre</option>
@@ -65,7 +67,18 @@
         <option value="Diabetes">Diabetes</option>
         <option value="Piel">Piel</option>
       </select>
+
+      <div class="filtro-estado-wrap">
+        <label for="filtro-estado">Tipo de venta</label>
+        <select id="filtro-estado" onchange="filtrarMedicamentos()">
+          <option value="">Todos</option>
+          <option value="venta_libre">Venta libre</option>
+          <option value="requiere_receta">Requiere receta</option>
+        </select>
+      </div>
     </div>
+
+    <p id="contador-resultados" class="contador-resultados" role="status"></p>
 
     <!-- Aquí JavaScript va a insertar las tarjetas de medicamentos -->
     <div id="lista-medicamentos">
@@ -150,14 +163,12 @@
 
     </div>
 
-  </div>
+  </main>
 
   <div id="site-footer"></div>
 
+  <script src="auth.js"></script>
   <script src="shared-ui.js"></script>
-  <!-- datos.js debe ir PRIMERO porque define la variable medicamentosData -->
-  <!-- que buscar.js necesita usar -->
-  <script src="datos.js"></script>
   <script src="buscar.js"></script>
 
 </body>

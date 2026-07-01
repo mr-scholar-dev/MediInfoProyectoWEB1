@@ -1,12 +1,41 @@
-const CLAVE_STORAGE = "mediinfo_mis_medicamentos";
 const get = (id) => document.getElementById(id);
 let editandoId = null;
 
 document.addEventListener("DOMContentLoaded", () => {
+  mostrarSaludoUsuario();
   mostrarMedicamentosGuardados();
   verificarPermisoNotificacion();
   iniciarCheckerAlarmas();
+  activarValidacionEnTiempoReal();
 });
+
+// Si hay sesión activa, personalizamos el encabezado con el nombre del usuario.
+function mostrarSaludoUsuario() {
+  const kicker = document.querySelector(".page-hero .page-kicker");
+  if (!kicker) return;
+
+  const usuario = obtenerSesion();
+  kicker.textContent = usuario ? `Hola, ${usuario}` : "Tu espacio personal (invitado)";
+}
+
+/* ── Validación en tiempo real ───────────────────── */
+
+// Mientras el usuario escribe, avisamos si el campo obligatorio está vacío.
+function activarValidacionEnTiempoReal() {
+  get("nombre").addEventListener("input", () => validarCampoObligatorio("nombre", "error-nombre"));
+  get("motivo").addEventListener("input", () => validarCampoObligatorio("motivo", "error-motivo"));
+}
+
+function validarCampoObligatorio(idCampo, idError) {
+  const campo = get(idCampo);
+  const error = get(idError);
+  const esValido = campo.value.trim().length > 0;
+
+  campo.classList.toggle("invalid", !esValido);
+  error.classList.toggle("visible", !esValido);
+
+  return esValido;
+}
 
 /* ── Notificaciones ─────────────────────────────── */
 
@@ -106,9 +135,16 @@ function limpiarAlarmasFormulario() {
 function guardarMedicamento(evento) {
   evento.preventDefault();
 
+  const nombreValido = validarCampoObligatorio("nombre", "error-nombre");
+  const motivoValido = validarCampoObligatorio("motivo", "error-motivo");
+
+  if (!nombreValido || !motivoValido) {
+    (nombreValido ? get("motivo") : get("nombre")).focus();
+    return;
+  }
+
   const nombre = get("nombre").value.trim();
   const motivo = get("motivo").value.trim();
-  if (!nombre || !motivo) return;
 
   const estado = document.querySelector('input[name="estado"]:checked')?.value || "activo";
   const datos = {
@@ -172,7 +208,6 @@ function editarMedicamento(id) {
 
   get("edit-banner").style.display = "flex";
   get("form-medicamento").querySelector(".btn-guardar").textContent = "Guardar cambios";
-  get("mismeds-form-panel")?.scrollIntoView({ behavior: "smooth" });
   document.querySelector(".mismeds-form-panel").scrollIntoView({ behavior: "smooth" });
 }
 
@@ -187,14 +222,14 @@ function cancelarEdicion() {
 
 function obtenerLista() {
   try {
-    return JSON.parse(localStorage.getItem(CLAVE_STORAGE) || "[]");
+    return JSON.parse(localStorage.getItem(claveMisMedicamentos()) || "[]");
   } catch {
     return [];
   }
 }
 
 function guardarLista(lista) {
-  localStorage.setItem(CLAVE_STORAGE, JSON.stringify(lista));
+  localStorage.setItem(claveMisMedicamentos(), JSON.stringify(lista));
 }
 
 function mostrarMedicamentosGuardados() {
@@ -275,6 +310,19 @@ function eliminarMedicamento(id) {
   if (!confirm("¿Seguro que querés eliminar este medicamento?")) return;
   guardarLista(obtenerLista().filter((med) => med.id !== id));
   mostrarMedicamentosGuardados();
+}
+
+// Limpieza controlada: borra todos los registros guardados, con confirmación previa.
+function vaciarRegistros() {
+  if (obtenerLista().length === 0) return;
+
+  if (!confirm("¿Seguro que querés eliminar TODOS los medicamentos guardados? Esta acción no se puede deshacer.")) {
+    return;
+  }
+
+  guardarLista([]);
+  mostrarMedicamentosGuardados();
+  alert("Se eliminaron todos los registros.");
 }
 
 function formatearFecha(fechaStr) {

@@ -15,6 +15,17 @@ function renderSharedUI() {
     )
     .join("");
 
+  // Estado de sesión (simulado con localStorage, ver auth.js).
+  const sesionActiva = typeof obtenerSesion === "function" ? obtenerSesion() : null;
+  const authBox = sesionActiva
+    ? `<div class="nav-auth">
+         <span class="nav-auth-saludo">Hola, ${sesionActiva}</span>
+         <button type="button" class="nav-auth-logout" onclick="cerrarSesion()">Cerrar sesión</button>
+       </div>`
+    : `<div class="nav-auth">
+         <a href="login.html" class="nav-auth-link">Iniciar sesión</a>
+       </div>`;
+
   const header = document.getElementById("site-header");
   if (header) {
     header.innerHTML = `
@@ -24,6 +35,7 @@ function renderSharedUI() {
           MediInfo <span style="color:var(--accent-red)">CR</span>
         </a>
         <ul>${navLinks}</ul>
+        ${authBox}
       </nav>
     `;
   }
@@ -50,6 +62,7 @@ function renderSharedUI() {
               <a href="buscar.html">Buscar medicamento</a>
               <a href="mis-medicamentos.html">Mis medicamentos</a>
               <a href="privacidad-uso.html">Privacidad y uso</a>
+              <a href="login.html">${sesionActiva ? "Mi cuenta" : "Iniciar sesión"}</a>
             </div>
 
             <div class="footer-links-group">

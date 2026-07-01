@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="assets/iconoMediCRcolores.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediInfo CR - Iniciar sesión</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="login">
+  <div id="site-header"></div>
+
+  <main class="contenedor legal-page">
+    <div class="page-hero">
+      <div>
+        <div class="page-kicker">Cuenta</div>
+        <h1>Iniciar sesión</h1>
+        <p>Creá una cuenta o iniciá sesión para que tu lista de "Mis medicamentos" quede guardada con tu nombre.</p>
+      </div>
+      <div class="page-tip">
+        <span>Importante</span>
+        <p>Esto es una simulación educativa: los datos quedan guardados solo en este navegador, sin cifrado real. No usés contraseñas que utilices en otros sitios.</p>
+      </div>
+    </div>
+
+    <div class="aviso">
+      MediInfo CR no tiene servidor propio. Este inicio de sesión guarda usuario y contraseña en tu navegador
+      (<code>localStorage</code>) únicamente para fines de práctica académica, no para proteger información real.
+    </div>
+
+    <div class="auth-tabs" id="auth-tabs">
+      <button type="button" class="chip chip-active" id="tab-login" onclick="mostrarTab('login')">Iniciar sesión</button>
+      <button type="button" class="chip" id="tab-registro" onclick="mostrarTab('registro')">Crear cuenta</button>
+    </div>
+
+    <div class="auth-panel">
+
+      <!-- Formulario: iniciar sesión -->
+      <form id="form-login" class="auth-form">
+        <label class="form-field-label" for="login-usuario">Usuario <span class="req">*</span></label>
+        <input class="form-input" type="text" id="login-usuario" placeholder="Ej: ana123" required autocomplete="username" />
+        <span class="form-error" id="error-login-usuario">Escribí tu usuario.</span>
+
+        <label class="form-field-label" for="login-clave">Contraseña <span class="req">*</span></label>
+        <input class="form-input" type="password" id="login-clave" placeholder="••••••" required autocomplete="current-password" />
+        <span class="form-error" id="error-login-clave">Escribí tu contraseña.</span>
+
+        <button type="submit" class="btn btn-guardar">Iniciar sesión</button>
+
+        <div class="form-success" id="login-mensaje-exito">Sesión iniciada correctamente.</div>
+        <span class="form-error" id="login-mensaje-error"></span>
+      </form>
+
+      <!-- Formulario: crear cuenta -->
+      <form id="form-registro" class="auth-form" style="display:none;">
+        <label class="form-field-label" for="registro-usuario">Usuario <span class="req">*</span></label>
+        <input class="form-input" type="text" id="registro-usuario" placeholder="Elegí un nombre de usuario" required autocomplete="username" />
+        <span class="form-error" id="error-registro-usuario">Mínimo 3 caracteres.</span>
+
+        <label class="form-field-label" for="registro-clave">Contraseña <span class="req">*</span></label>
+        <input class="form-input" type="password" id="registro-clave" placeholder="Mínimo 4 caracteres" required autocomplete="new-password" />
+        <span class="form-error" id="error-registro-clave">Mínimo 4 caracteres.</span>
+
+        <label class="form-field-label" for="registro-clave-confirmar">Confirmar contraseña <span class="req">*</span></label>
+        <input class="form-input" type="password" id="registro-clave-confirmar" placeholder="Repetí la contraseña" required autocomplete="new-password" />
+        <span class="form-error" id="error-registro-clave-confirmar">Las contraseñas no coinciden.</span>
+
+        <button type="submit" class="btn btn-guardar">Crear cuenta</button>
+
+        <div class="form-success" id="registro-mensaje-exito">Cuenta creada correctamente.</div>
+        <span class="form-error" id="registro-mensaje-error"></span>
+      </form>
+
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="auth.js"></script>
+  <script src="shared-ui.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>

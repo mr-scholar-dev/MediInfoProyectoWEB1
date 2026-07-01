@@ -1,7 +1,7 @@
-// Clave de localStorage donde guardamos la lista personal del usuario.
-const KEY_MIS_MEDICAMENTOS = "mediinfo_mis_medicamentos";
+// Ruta del archivo JSON con los datos reales de medicamentos.
+const RUTA_JSON_MEDICAMENTOS = "data/medicamentos.json";
 
-// Lista completa de medicamentos cargados desde datos.js.
+// Lista completa de medicamentos cargados desde el JSON.
 let todosMedicamentos = [];
 
 // Aquí guardamos el medicamento que el usuario abrió en la ficha.
@@ -13,19 +13,31 @@ const get = (id) => document.getElementById(id);
 // Cuando el HTML termina de cargarse, mostramos los medicamentos.
 document.addEventListener("DOMContentLoaded", cargarMedicamentos);
 
-// Carga los datos del archivo datos.js y muestra todo en pantalla.
-function cargarMedicamentos() {
-  todosMedicamentos = medicamentosData;
-  mostrarMedicamentos(todosMedicamentos);
+// Carga los datos reales desde el archivo JSON y muestra todo en pantalla.
+async function cargarMedicamentos() {
+  const contenedor = get("lista-medicamentos");
+  try {
+    const respuesta = await fetch(RUTA_JSON_MEDICAMENTOS);
+    if (!respuesta.ok) throw new Error("No se pudo leer el archivo JSON.");
+    todosMedicamentos = await respuesta.json();
+    mostrarMedicamentos(todosMedicamentos);
+  } catch (error) {
+    contenedor.innerHTML =
+      '<p class="sin-resultados">No se pudieron cargar los medicamentos. Si abriste el archivo directamente (file://), usá un servidor local.</p>';
+    console.error(error);
+  }
 }
 
-// Filtra por nombre y por categoría al mismo tiempo.
+// Filtra por nombre, por categoría y por estado (venta libre / requiere receta) al mismo tiempo.
 function filtrarMedicamentos() {
   // Tomamos lo que escribió el usuario y lo pasamos a minúsculas.
   const textoBusqueda = get("buscador").value.toLowerCase();
 
   // Tomamos la categoría elegida en el select.
   const categoriaSeleccionada = get("filtro-categoria").value;
+
+  // Tomamos el estado elegido (venta_libre / requiere_receta).
+  const estadoSeleccionado = get("filtro-estado") ? get("filtro-estado").value : "";
 
   // Recorremos la lista completa y nos quedamos solo con los que coinciden.
   const resultados = todosMedicamentos.filter((med) => {
@@ -37,7 +49,11 @@ function filtrarMedicamentos() {
     const coincideCategoria =
       categoriaSeleccionada === "" || med.categoria === categoriaSeleccionada;
 
-    return coincideNombre && coincideCategoria;
+    // Igual que la categoría, pero para el campo estado.
+    const coincideEstado =
+      estadoSeleccionado === "" || med.estado === estadoSeleccionado;
+
+    return coincideNombre && coincideCategoria && coincideEstado;
   });
 
   // Mostramos los medicamentos que sí cumplieron el filtro.
@@ -50,6 +66,15 @@ function filtrarMedicamentos() {
 // Dibuja las tarjetas de medicamentos dentro del contenedor principal.
 function mostrarMedicamentos(lista) {
   const contenedor = get("lista-medicamentos");
+  const contador = get("contador-resultados");
+
+  // Procesamiento de datos: contamos cuántos resultados hay para informar al usuario.
+  if (contador) {
+    contador.textContent =
+      lista.length === 0
+        ? ""
+        : `${lista.length} medicamento${lista.length !== 1 ? "s" : ""} encontrado${lista.length !== 1 ? "s" : ""}`;
+  }
 
   // Si no hay resultados, mostramos un mensaje en lugar de dejar vacío.
   if (lista.length === 0) {
@@ -79,6 +104,7 @@ function crearTarjetaMedicamento(med) {
   tarjeta.className = "card-medicamento";
   const resumenUso = recortarTexto(med.uso_general, 90);
   const cfg = CATEGORIA_CONFIG[med.categoria] || { color: "#1D6FEB", icon: "💉" };
+  const etiquetaEstado = med.estado === "requiere_receta" ? "Requiere receta" : "Venta libre";
 
   tarjeta.style.setProperty("--cat-color", cfg.color);
 
@@ -86,6 +112,7 @@ function crearTarjetaMedicamento(med) {
     <div class="card-med-top">
       <span class="card-med-icon">${cfg.icon}</span>
       <span class="categoria-badge" style="background:${cfg.color}18;color:${cfg.color};border-color:${cfg.color}35">${med.categoria}</span>
+      <span class="estado-badge">${etiquetaEstado}</span>
     </div>
     <h3 class="card-med-nombre">${med.nombre}</h3>
     <p class="card-med-generico">${med.nombre_generico}</p>
@@ -156,7 +183,7 @@ function guardarDesdeBusqueda() {
   }
 
   // Traemos la lista que ya estaba guardada en el navegador.
-  const listaGuardada = JSON.parse(localStorage.getItem(KEY_MIS_MEDICAMENTOS) || "[]");
+  const listaGuardada = JSON.parse(localStorage.getItem(claveMisMedicamentos()) || "[]");
 
   // Evitamos duplicados comparando por nombre.
   const yaExiste = listaGuardada.some(
@@ -180,7 +207,7 @@ function guardarDesdeBusqueda() {
   });
 
   // Guardamos la lista actualizada y enviamos al usuario a la otra página.
-  localStorage.setItem(KEY_MIS_MEDICAMENTOS, JSON.stringify(listaGuardada));
+  localStorage.setItem(claveMisMedicamentos(), JSON.stringify(listaGuardada));
   alert("Medicamento guardado. Te llevamos a tu lista.");
   window.location.href = "mis-medicamentos.html";
 }

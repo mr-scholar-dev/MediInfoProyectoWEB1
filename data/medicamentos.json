@@ -4,6 +4,7 @@
     "nombre": "Acetaminofén",
     "nombre_generico": "Paracetamol",
     "categoria": "Dolor y fiebre",
+    "estado": "venta_libre",
     "uso_general": "Se utiliza para aliviar el dolor leve o moderado y para reducir la fiebre.",
     "presentaciones_comunes": ["Tabletas", "Jarabe", "Gotas", "Supositorios"],
     "requiere_receta": "No siempre, depende de la presentación.",
@@ -34,6 +35,7 @@
     "nombre": "Ibuprofeno",
     "nombre_generico": "Ibuprofeno",
     "categoria": "Dolor y fiebre",
+    "estado": "venta_libre",
     "uso_general": "Se usa para aliviar dolor, reducir inflamación y bajar la fiebre.",
     "presentaciones_comunes": ["Tabletas", "Cápsulas", "Suspensión oral", "Gel tópico"],
     "requiere_receta": "No siempre para dosis bajas. Dosis altas requieren receta.",
@@ -64,6 +66,7 @@
     "nombre": "Amoxicilina",
     "nombre_generico": "Amoxicilina",
     "categoria": "Antibióticos",
+    "estado": "requiere_receta",
     "uso_general": "Antibiótico utilizado para tratar infecciones bacterianas como infecciones respiratorias, urinarias y de piel.",
     "presentaciones_comunes": ["Cápsulas", "Tabletas", "Suspensión oral"],
     "requiere_receta": "Sí, siempre requiere receta médica.",
@@ -94,6 +97,7 @@
     "nombre": "Loratadina",
     "nombre_generico": "Loratadina",
     "categoria": "Alergias",
+    "estado": "venta_libre",
     "uso_general": "Antihistamínico utilizado para aliviar síntomas de alergia como picazón, estornudos y ojos llorosos.",
     "presentaciones_comunes": ["Tabletas", "Jarabe", "Cápsulas"],
     "requiere_receta": "Generalmente no requiere receta.",
@@ -124,6 +128,7 @@
     "nombre": "Omeprazol",
     "nombre_generico": "Omeprazol",
     "categoria": "Estómago",
+    "estado": "venta_libre",
     "uso_general": "Se utiliza para reducir la acidez estomacal, tratar úlceras y el reflujo gastroesofágico.",
     "presentaciones_comunes": ["Cápsulas", "Tabletas"],
     "requiere_receta": "Depende de la dosis y duración del tratamiento.",
@@ -154,6 +159,7 @@
     "nombre": "Metformina",
     "nombre_generico": "Metformina",
     "categoria": "Diabetes",
+    "estado": "requiere_receta",
     "uso_general": "Medicamento para el control de la glucosa en sangre en personas con diabetes tipo 2.",
     "presentaciones_comunes": ["Tabletas", "Tabletas de liberación prolongada"],
     "requiere_receta": "Sí, siempre requiere receta médica.",
@@ -183,6 +189,7 @@
     "nombre": "Clorfeniramina",
     "nombre_generico": "Clorfeniramina maleato",
     "categoria": "Alergias",
+    "estado": "venta_libre",
     "uso_general": "Antihistamínico para aliviar síntomas de alergia, resfriado y picazón.",
     "presentaciones_comunes": ["Tabletas", "Jarabe", "Gotas"],
     "requiere_receta": "Generalmente no requiere receta.",
@@ -213,6 +220,7 @@
     "nombre": "Hidrocortisona",
     "nombre_generico": "Hidrocortisona",
     "categoria": "Piel",
+    "estado": "venta_libre",
     "uso_general": "Corticosteroide utilizado para tratar inflamación, picazón y alergias en la piel.",
     "presentaciones_comunes": ["Crema", "Ungüento", "Loción"],
     "requiere_receta": "Depende de la concentración. Las de baja dosis suelen ser de venta libre.",
@@ -234,6 +242,67 @@
       "Puede reducir efectividad de algunos tratamientos tópicos antifúngicos."
     ],
     "uso_seguro": "Aplicar una capa delgada en la zona afectada. No cubrir con vendajes herméticos sin indicación.",
+    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico."
+  },
+  {
+    "id": 9,
+    "nombre": "Diclofenaco",
+    "nombre_generico": "Diclofenaco sódico",
+    "categoria": "Dolor y fiebre",
+    "estado": "requiere_receta",
+    "uso_general": "Antiinflamatorio no esteroideo usado para dolor muscular, articular y procesos inflamatorios.",
+    "presentaciones_comunes": ["Tabletas", "Gel tópico", "Inyectable"],
+    "requiere_receta": "Sí, para uso oral e inyectable. El gel tópico suele ser de venta libre.",
+    "advertencias": [
+      "No usar por períodos prolongados sin supervisión médica.",
+      "Tomar con alimentos para reducir molestias estomacales.",
+      "Precaución en personas con presión arterial alta."
+    ],
+    "efectos_secundarios_comunes": ["Dolor de estómago", "Dolor de cabeza", "Mareos"],
+    "efectos_secundarios_graves": [
+      "Sangrado gastrointestinal",
+      "Problemas cardiovasculares",
+      "Daño renal"
+    ],
+    "contraindicaciones_generales": [
+      "No recomendado en personas con enfermedad cardiovascular grave.",
+      "Precaución en personas con úlceras gástricas activas."
+    ],
+    "interacciones_generales": [
+      "Puede interactuar con anticoagulantes.",
+      "Evitar combinar con otros antiinflamatorios no esteroideos."
+    ],
+    "uso_seguro": "Usar la menor dosis efectiva durante el menor tiempo posible.",
+    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico."
+  },
+  {
+    "id": 10,
+    "nombre": "Cetirizina",
+    "nombre_generico": "Cetirizina",
+    "categoria": "Alergias",
+    "estado": "venta_libre",
+    "uso_general": "Antihistamínico de segunda generación usado para aliviar síntomas de alergia con menor somnolencia.",
+    "presentaciones_comunes": ["Tabletas", "Gotas", "Jarabe"],
+    "requiere_receta": "Generalmente no requiere receta.",
+    "advertencias": [
+      "Puede causar somnolencia leve en algunas personas.",
+      "Precaución al conducir hasta conocer la reacción individual.",
+      "Consultar antes de usar durante el embarazo."
+    ],
+    "efectos_secundarios_comunes": ["Somnolencia leve", "Boca seca", "Fatiga"],
+    "efectos_secundarios_graves": [
+      "Reacciones alérgicas",
+      "Dificultad para respirar"
+    ],
+    "contraindicaciones_generales": [
+      "Precaución en personas con insuficiencia renal.",
+      "Consultar en caso de lactancia."
+    ],
+    "interacciones_generales": [
+      "Puede potenciar el efecto sedante de otros medicamentos.",
+      "Evitar combinar con alcohol."
+    ],
+    "uso_seguro": "Tomar una vez al día según lo indicado en el empaque.",
     "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico."
   }
 ]
