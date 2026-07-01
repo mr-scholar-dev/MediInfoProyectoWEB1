@@ -36,6 +36,15 @@ function iniciarSesionLocal(usuario) {
   localStorage.setItem(CLAVE_SESION, usuario);
 }
 
+// Devuelve true si hay sesión activa; si no, manda al login.
+function requerirSesion(redirectTo = "login.html") {
+  if (obtenerSesion()) return true;
+  const destino = new URL(redirectTo, window.location.href);
+  destino.searchParams.set("returnTo", window.location.pathname.split("/").pop() || "index.html");
+  window.location.href = destino.toString();
+  return false;
+}
+
 function cerrarSesion() {
   localStorage.removeItem(CLAVE_SESION);
   window.location.href = "index.html";

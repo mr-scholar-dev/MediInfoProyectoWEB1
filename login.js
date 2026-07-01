@@ -1,9 +1,11 @@
 const get = (id) => document.getElementById(id);
+const params = new URLSearchParams(window.location.search);
+const returnTo = params.get("returnTo") || "mis-medicamentos.html";
 
 document.addEventListener("DOMContentLoaded", () => {
   // Si ya hay una sesión activa, no tiene sentido mostrar el login de nuevo.
   if (obtenerSesion()) {
-    window.location.href = "mis-medicamentos.html";
+    window.location.href = returnTo;
     return;
   }
 
@@ -82,7 +84,7 @@ function manejarLogin(evento) {
   mensajeExito.textContent = resultado.mensaje;
 
   setTimeout(() => {
-    window.location.href = "mis-medicamentos.html";
+    window.location.href = returnTo;
   }, 900);
 }
 
@@ -109,6 +111,6 @@ function manejarRegistro(evento) {
   mensajeExito.textContent = resultado.mensaje;
 
   setTimeout(() => {
-    window.location.href = "mis-medicamentos.html";
+    window.location.href = returnTo;
   }, 900);
 }

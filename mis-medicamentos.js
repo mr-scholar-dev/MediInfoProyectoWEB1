@@ -2,6 +2,7 @@ const get = (id) => document.getElementById(id);
 let editandoId = null;
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (!requerirSesion()) return;
   mostrarSaludoUsuario();
   mostrarMedicamentosGuardados();
   verificarPermisoNotificacion();
