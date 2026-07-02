@@ -1,6 +1,3 @@
-// Ruta del archivo JSON con los datos reales de medicamentos.
-const RUTA_JSON_MEDICAMENTOS = "data/medicamentos.json";
-
 // Lista completa de medicamentos cargados desde el JSON.
 let todosMedicamentos = [];
 
@@ -17,15 +14,21 @@ document.addEventListener("DOMContentLoaded", cargarMedicamentos);
 async function cargarMedicamentos() {
   const contenedor = get("lista-medicamentos");
   try {
-    const respuesta = await fetch(RUTA_JSON_MEDICAMENTOS);
-    if (!respuesta.ok) throw new Error("No se pudo leer el archivo JSON.");
-    todosMedicamentos = await respuesta.json();
+    todosMedicamentos = await obtenerMedicamentos();
     mostrarMedicamentos(todosMedicamentos);
   } catch (error) {
     contenedor.innerHTML =
-      '<p class="sin-resultados">No se pudieron cargar los medicamentos. Si abriste el archivo directamente (file://), usá un servidor local.</p>';
+      '<p class="sin-resultados">No se pudieron cargar los medicamentos.</p>';
     console.error(error);
   }
+}
+
+async function obtenerMedicamentos() {
+  if (Array.isArray(window.MEDICAMENTOS_DATA)) return window.MEDICAMENTOS_DATA;
+
+  const respuesta = await fetch("data/medicamentos.json");
+  if (!respuesta.ok) throw new Error("No se pudo leer el archivo JSON.");
+  return respuesta.json();
 }
 
 // Filtra por nombre, por categoría y por estado (venta libre / requiere receta) al mismo tiempo.
@@ -91,32 +94,34 @@ function mostrarMedicamentos(lista) {
 }
 
 const CATEGORIA_CONFIG = {
-  "Dolor y fiebre":  { color: "#FF6B6B", icon: "💊" },
-  "Antibióticos":    { color: "#4ECDC4", icon: "🦠" },
-  "Alergias":        { color: "#A78BFA", icon: "🌿" },
-  "Estómago":        { color: "#F59E0B", icon: "🫀" },
-  "Diabetes":        { color: "#34D399", icon: "🩸" },
-  "Piel":            { color: "#FB923C", icon: "🩹" },
+  "Dolor y fiebre":  { color: "#FF6B6B" },
+  "Antibióticos":    { color: "#4ECDC4" },
+  "Alergias":        { color: "#A78BFA" },
+  "Estómago":        { color: "#F59E0B" },
+  "Diabetes":        { color: "#34D399" },
+  "Piel":            { color: "#FB923C" },
 };
 
 function crearTarjetaMedicamento(med) {
   const tarjeta = document.createElement("div");
   tarjeta.className = "card-medicamento";
   const resumenUso = recortarTexto(med.uso_general, 90);
-  const cfg = CATEGORIA_CONFIG[med.categoria] || { color: "#1D6FEB", icon: "💉" };
+  const cfg = CATEGORIA_CONFIG[med.categoria] || { color: "#1D6FEB" };
   const etiquetaEstado = med.estado === "requiere_receta" ? "Requiere receta" : "Venta libre";
+  const presentacion = med.presentaciones_comunes?.[0] || "Presentaciones variadas";
 
   tarjeta.style.setProperty("--cat-color", cfg.color);
 
   tarjeta.innerHTML = `
     <div class="card-med-top">
-      <span class="card-med-icon">${cfg.icon}</span>
-      <span class="categoria-badge" style="background:${cfg.color}18;color:${cfg.color};border-color:${cfg.color}35">${med.categoria}</span>
+      <span class="categoria-badge" style="background:${cfg.color}12;color:${cfg.color};border-color:${cfg.color}24">${med.categoria}</span>
       <span class="estado-badge">${etiquetaEstado}</span>
     </div>
     <h3 class="card-med-nombre">${med.nombre}</h3>
     <p class="card-med-generico">${med.nombre_generico}</p>
     <p class="card-med-uso">${resumenUso}</p>
+    <div class="card-med-divider"></div>
+    <p class="card-med-extra"><span>${presentacion}</span></p>
     <span class="card-med-link">Ver detalles →</span>
   `;
 
@@ -134,6 +139,8 @@ function mostrarFicha(med) {
   get("ficha-generico").textContent = `Nombre genérico: ${med.nombre_generico}`;
   get("ficha-categoria").textContent = med.categoria;
   get("ficha-uso").textContent = med.uso_general;
+  get("ficha-edad").textContent = med.edad_orientativa || "No especificado";
+  get("ficha-apto").textContent = med.apto_para || "No especificado";
   get("ficha-presentaciones").textContent = med.presentaciones_comunes.join(", ");
   get("ficha-receta").textContent = med.requiere_receta;
   get("ficha-uso-seguro").textContent = med.uso_seguro;
@@ -181,6 +188,9 @@ function guardarDesdeBusqueda() {
     alert("Por favor seleccioná un medicamento primero.");
     return;
   }
+
+  // Guardamos siempre dentro de una sesión real para evitar que se vaya a "invitado".
+  if (!requerirSesion("login.html")) return;
 
   // Traemos la lista que ya estaba guardada en el navegador.
   const listaGuardada = JSON.parse(localStorage.getItem(claveMisMedicamentos()) || "[]");

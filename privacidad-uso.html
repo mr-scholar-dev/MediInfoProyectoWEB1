@@ -14,65 +14,84 @@
   <div id="site-header"></div>
 
   <main class="contenedor legal-page">
-    <div class="page-hero legal-hero">
-      <div>
+    <section class="page-hero legal-hero legal-hero--center">
+      <div class="legal-hero-copy">
         <div class="page-kicker">Privacidad y uso</div>
-        <h1>Privacidad y uso de MediInfo CR</h1>
+        <h1>Privacidad y uso</h1>
         <p>
           Esta página explica de forma simple cómo usamos los datos y cuáles son las reglas básicas
           para usar el sitio de manera responsable.
         </p>
       </div>
-      <div class="page-tip">
-        <span>Lectura rápida</span>
-        <p>Guardamos datos solo en tu navegador, sin cuentas ni servidor externo.</p>
+    </section>
+
+    <section class="legal-summary">
+      <div class="legal-summary-item">
+        <span>Guardado</span>
+        <strong>Solo local</strong>
       </div>
-    </div>
+      <div class="legal-summary-item">
+        <span>Uso</span>
+        <strong>Educativo</strong>
+      </div>
+      <div class="legal-summary-item">
+        <span>Apoyo</span>
+        <strong>Sin reemplazar atención médica</strong>
+      </div>
+      <div class="legal-summary-item">
+        <span>Privacidad</span>
+        <strong>Todo local</strong>
+      </div>
+    </section>
 
     <div class="legal-grid">
       <section class="legal-card">
-        <h2>Privacidad</h2>
+        <div class="legal-card-kicker">Privacidad</div>
+        <h2>Privacidad local</h2>
         <p>
-          MediInfo CR no crea cuentas de usuario y no solicita correo, contraseña ni información personal sensible.
+          MediInfo CR no crea cuentas reales ni pide correo o datos personales sensibles.
         </p>
-        <ul>
-          <li>Los medicamentos que guardás se almacenan solo en tu navegador usando <code>localStorage</code>.</li>
-          <li>Si borrás los datos del navegador, también se borra tu lista guardada.</li>
-          <li>No enviamos tu lista a un servidor externo.</li>
-          <li>La función de mapa puede abrir Google Maps para buscar ubicaciones o rutas.</li>
-        </ul>
+        <div class="legal-pill-list">
+          <div>Los medicamentos guardados viven solo en tu navegador con <code>localStorage</code>.</div>
+          <div>Si borrás los datos del navegador, se borra también tu lista.</div>
+          <div>No enviamos tu información a un servidor externo.</div>
+          <div>El mapa puede abrir Google Maps para buscar rutas o ubicaciones.</div>
+        </div>
       </section>
 
       <section class="legal-card">
+        <div class="legal-card-kicker">Uso</div>
         <h2>Uso permitido</h2>
         <p>
           El sitio está pensado para aprender, organizar información y consultar medicamentos de forma educativa.
         </p>
-        <ul>
-          <li>Podés buscar medicamentos por nombre o categoría.</li>
-          <li>Podés guardar medicamentos en tu lista personal.</li>
-          <li>Podés consultar EBAIS cercanos como apoyo de ubicación.</li>
-          <li>No debés usar la información para reemplazar indicaciones médicas profesionales.</li>
-        </ul>
+        <div class="legal-pill-list">
+          <div>Podés buscar medicamentos por nombre o categoría.</div>
+          <div>Podés guardar medicamentos en tu lista personal.</div>
+          <div>Podés consultar EBAIS cercanos como apoyo de ubicación.</div>
+          <div>No debés usarlo para reemplazar indicaciones médicas profesionales.</div>
+        </div>
       </section>
 
       <section class="legal-card">
+        <div class="legal-card-kicker">Límites</div>
         <h2>Limitaciones</h2>
         <p>
           La información del proyecto es general y educativa. Puede no estar actualizada para cada caso particular.
         </p>
-        <ul>
-          <li>No ofrece diagnósticos.</li>
-          <li>No indica dosis personalizadas.</li>
-          <li>No sustituye un farmacéutico, médico o centro de salud.</li>
-          <li>Ante emergencias, siempre buscá atención profesional inmediata.</li>
-        </ul>
+        <div class="legal-pill-list">
+          <div>No ofrece diagnósticos.</div>
+          <div>No indica dosis personalizadas.</div>
+          <div>No sustituye un farmacéutico, médico o centro de salud.</div>
+          <div>Ante emergencias, buscá atención profesional inmediata.</div>
+        </div>
       </section>
 
-      <section class="legal-card">
-        <h2>Contactos útiles</h2>
+      <section class="legal-card legal-card-actions">
+        <div class="legal-card-kicker">Explorar</div>
+        <h2>Seguir navegando</h2>
         <p>
-          Si querés seguir explorando el proyecto, podés volver a estas secciones:
+          Si querés seguir explorando el proyecto, podés volver a estas secciones.
         </p>
         <div class="legal-links">
           <a href="buscar.html" class="btn">Buscar medicamento</a>
@@ -84,7 +103,7 @@
 
   <div id="site-footer"></div>
 
-  <script src="auth.js"></script>
-  <script src="shared-ui.js"></script>
+  <script src="js/core/auth.js"></script>
+  <script src="js/core/shared-ui.js"></script>
 </body>
 </html>

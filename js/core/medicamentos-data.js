@@ -1,4 +1,4 @@
-[
+window.MEDICAMENTOS_DATA = [
   {
     "id": 1,
     "nombre": "Acetaminofén",
@@ -6,22 +6,14 @@
     "categoria": "Dolor y fiebre",
     "estado": "venta_libre",
     "uso_general": "Se utiliza para aliviar el dolor leve o moderado y para reducir la fiebre.",
-    "presentaciones_comunes": [
-      "Tabletas",
-      "Jarabe",
-      "Gotas",
-      "Supositorios"
-    ],
+    "presentaciones_comunes": ["Tabletas", "Jarabe", "Gotas", "Supositorios"],
     "requiere_receta": "No siempre, depende de la presentación.",
     "advertencias": [
       "No exceder la dosis recomendada.",
       "Tener precaución si hay problemas hepáticos.",
       "Evitar combinar con otros productos que también contengan paracetamol."
     ],
-    "efectos_secundarios_comunes": [
-      "Náuseas leves",
-      "Malestar estomacal"
-    ],
+    "efectos_secundarios_comunes": ["Náuseas leves", "Malestar estomacal"],
     "efectos_secundarios_graves": [
       "Reacciones alérgicas",
       "Coloración amarillenta en piel u ojos",
@@ -36,9 +28,7 @@
       "Evitar duplicar con otros medicamentos que tengan el mismo principio activo."
     ],
     "uso_seguro": "Utilizar según indicación médica o instrucciones del empaque. No aumentar la dosis por cuenta propia.",
-    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
-    "edad_orientativa": "Uso común en adolescentes y adultos. En niños pequeños consultar pediatría.",
-    "apto_para": "Adolescentes y adultos; en embarazo, lactancia o enfermedad hepática consultar."
+    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico."
   },
   {
     "id": 2,
@@ -47,23 +37,14 @@
     "categoria": "Dolor y fiebre",
     "estado": "venta_libre",
     "uso_general": "Se usa para aliviar dolor, reducir inflamación y bajar la fiebre.",
-    "presentaciones_comunes": [
-      "Tabletas",
-      "Cápsulas",
-      "Suspensión oral",
-      "Gel tópico"
-    ],
+    "presentaciones_comunes": ["Tabletas", "Cápsulas", "Suspensión oral", "Gel tópico"],
     "requiere_receta": "No siempre para dosis bajas. Dosis altas requieren receta.",
     "advertencias": [
       "Tomar con alimentos para reducir molestias estomacales.",
       "No usar por períodos prolongados sin supervisión médica.",
       "Tener precaución en personas con problemas renales o cardíacos."
     ],
-    "efectos_secundarios_comunes": [
-      "Dolor de estómago",
-      "Náuseas",
-      "Mareos"
-    ],
+    "efectos_secundarios_comunes": ["Dolor de estómago", "Náuseas", "Mareos"],
     "efectos_secundarios_graves": [
       "Sangrado gastrointestinal",
       "Problemas renales",
@@ -78,9 +59,7 @@
       "Evitar combinarlo con otros antiinflamatorios."
     ],
     "uso_seguro": "Tomar con comida o leche. No exceder la dosis indicada.",
-    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
-    "edad_orientativa": "Uso frecuente en adolescentes y adultos. En niños depende de la dosis indicada por un profesional.",
-    "apto_para": "Adolescentes y adultos; precaución en personas con gastritis, úlcera o problemas renales."
+    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico."
   },
   {
     "id": 3,
@@ -89,22 +68,14 @@
     "categoria": "Antibióticos",
     "estado": "requiere_receta",
     "uso_general": "Antibiótico utilizado para tratar infecciones bacterianas como infecciones respiratorias, urinarias y de piel.",
-    "presentaciones_comunes": [
-      "Cápsulas",
-      "Tabletas",
-      "Suspensión oral"
-    ],
+    "presentaciones_comunes": ["Cápsulas", "Tabletas", "Suspensión oral"],
     "requiere_receta": "Sí, siempre requiere receta médica.",
     "advertencias": [
       "Completar el tratamiento aunque los síntomas mejoren antes.",
       "Informar al médico sobre alergias a penicilinas.",
       "No usar para tratar infecciones virales como el resfriado común."
     ],
-    "efectos_secundarios_comunes": [
-      "Diarrea",
-      "Náuseas",
-      "Erupciones leves en la piel"
-    ],
+    "efectos_secundarios_comunes": ["Diarrea", "Náuseas", "Erupciones leves en la piel"],
     "efectos_secundarios_graves": [
       "Reacciones alérgicas graves",
       "Dificultad para respirar",
@@ -119,9 +90,7 @@
       "Interacción con anticoagulantes como warfarina."
     ],
     "uso_seguro": "Tomar a las horas indicadas por el médico. No interrumpir el tratamiento sin autorización.",
-    "nota_importante": "Esta información es educativa. Los antibióticos solo deben usarse con prescripción médica.",
-    "edad_orientativa": "Puede usarse en niños y adultos solo con indicación médica y ajuste de dosis.",
-    "apto_para": "Niños, adolescentes y adultos bajo receta. Requiere evaluación médica previa."
+    "nota_importante": "Esta información es educativa. Los antibióticos solo deben usarse con prescripción médica."
   },
   {
     "id": 4,
@@ -130,22 +99,14 @@
     "categoria": "Alergias",
     "estado": "venta_libre",
     "uso_general": "Antihistamínico utilizado para aliviar síntomas de alergia como picazón, estornudos y ojos llorosos.",
-    "presentaciones_comunes": [
-      "Tabletas",
-      "Jarabe",
-      "Cápsulas"
-    ],
+    "presentaciones_comunes": ["Tabletas", "Jarabe", "Cápsulas"],
     "requiere_receta": "Generalmente no requiere receta.",
     "advertencias": [
       "Puede causar somnolencia en algunas personas.",
       "Consultar antes de usar durante el embarazo.",
       "No exceder la dosis recomendada."
     ],
-    "efectos_secundarios_comunes": [
-      "Somnolencia leve",
-      "Dolor de cabeza",
-      "Boca seca"
-    ],
+    "efectos_secundarios_comunes": ["Somnolencia leve", "Dolor de cabeza", "Boca seca"],
     "efectos_secundarios_graves": [
       "Reacciones alérgicas",
       "Ritmo cardíaco irregular",
@@ -160,9 +121,7 @@
       "Evitar combinar con otros antihistamínicos."
     ],
     "uso_seguro": "Tomar una vez al día según lo indicado. No combinar con alcohol.",
-    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
-    "edad_orientativa": "Se usa en adolescentes y adultos; en niños y embarazadas consultar antes.",
-    "apto_para": "Adolescentes y adultos; en embarazo, lactancia o enfermedad hepática consultar."
+    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico."
   },
   {
     "id": 5,
@@ -171,21 +130,14 @@
     "categoria": "Estómago",
     "estado": "venta_libre",
     "uso_general": "Se utiliza para reducir la acidez estomacal, tratar úlceras y el reflujo gastroesofágico.",
-    "presentaciones_comunes": [
-      "Cápsulas",
-      "Tabletas"
-    ],
+    "presentaciones_comunes": ["Cápsulas", "Tabletas"],
     "requiere_receta": "Depende de la dosis y duración del tratamiento.",
     "advertencias": [
       "No usar por períodos muy prolongados sin supervisión médica.",
       "Puede reducir la absorción de algunos nutrientes.",
       "Consultar antes de usar si hay problemas renales o hepáticos."
     ],
-    "efectos_secundarios_comunes": [
-      "Dolor de cabeza",
-      "Diarrea",
-      "Náuseas"
-    ],
+    "efectos_secundarios_comunes": ["Dolor de cabeza", "Diarrea", "Náuseas"],
     "efectos_secundarios_graves": [
       "Problemas renales",
       "Deficiencia de magnesio",
@@ -200,9 +152,7 @@
       "Interacción con clopidogrel y metotrexato."
     ],
     "uso_seguro": "Tomar antes de las comidas. No triturar ni masticar las cápsulas.",
-    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
-    "edad_orientativa": "Más usado en adolescentes y adultos. En niños y tratamientos largos consultar.",
-    "apto_para": "Adolescentes y adultos; precaución si hay reflujo persistente o uso prolongado."
+    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico."
   },
   {
     "id": 6,
@@ -211,21 +161,14 @@
     "categoria": "Diabetes",
     "estado": "requiere_receta",
     "uso_general": "Medicamento para el control de la glucosa en sangre en personas con diabetes tipo 2.",
-    "presentaciones_comunes": [
-      "Tabletas",
-      "Tabletas de liberación prolongada"
-    ],
+    "presentaciones_comunes": ["Tabletas", "Tabletas de liberación prolongada"],
     "requiere_receta": "Sí, siempre requiere receta médica.",
     "advertencias": [
       "No tomar alcohol en exceso durante el tratamiento.",
       "Informar al médico antes de cualquier cirugía o procedimiento con contraste.",
       "Tomar con alimentos para reducir molestias estomacales."
     ],
-    "efectos_secundarios_comunes": [
-      "Diarrea",
-      "Náuseas",
-      "Malestar estomacal al inicio"
-    ],
+    "efectos_secundarios_comunes": ["Diarrea", "Náuseas", "Malestar estomacal al inicio"],
     "efectos_secundarios_graves": [
       "Acidosis láctica (muy rara pero grave)",
       "Hipoglucemia si se combina con otros medicamentos"
@@ -239,9 +182,7 @@
       "Interacción con alcohol puede aumentar el riesgo de acidosis."
     ],
     "uso_seguro": "Tomar exactamente como lo indica el médico. No suspender sin consultar.",
-    "nota_importante": "Esta información es educativa. La diabetes requiere seguimiento médico continuo.",
-    "edad_orientativa": "Uso en adultos y algunos adolescentes según criterio médico.",
-    "apto_para": "Principalmente adultos con diabetes tipo 2 bajo seguimiento médico."
+    "nota_importante": "Esta información es educativa. La diabetes requiere seguimiento médico continuo."
   },
   {
     "id": 7,
@@ -250,22 +191,14 @@
     "categoria": "Alergias",
     "estado": "venta_libre",
     "uso_general": "Antihistamínico para aliviar síntomas de alergia, resfriado y picazón.",
-    "presentaciones_comunes": [
-      "Tabletas",
-      "Jarabe",
-      "Gotas"
-    ],
+    "presentaciones_comunes": ["Tabletas", "Jarabe", "Gotas"],
     "requiere_receta": "Generalmente no requiere receta.",
     "advertencias": [
       "Puede causar somnolencia importante. No manejar ni operar maquinaria.",
       "No combinar con alcohol.",
       "Precaución en personas mayores."
     ],
-    "efectos_secundarios_comunes": [
-      "Somnolencia",
-      "Boca seca",
-      "Visión borrosa"
-    ],
+    "efectos_secundarios_comunes": ["Somnolencia", "Boca seca", "Visión borrosa"],
     "efectos_secundarios_graves": [
       "Dificultad para orinar",
       "Confusión en personas mayores",
@@ -280,9 +213,7 @@
       "Interacción con inhibidores de MAO."
     ],
     "uso_seguro": "Tomar según la dosis indicada. Evitar actividades que requieran concentración.",
-    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
-    "edad_orientativa": "Puede usarse en adultos y algunos niños, pero en mayores de edad avanzada da más sueño.",
-    "apto_para": "Adultos y población pediátrica según presentación; precaución en adultos mayores."
+    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico."
   },
   {
     "id": 8,
@@ -291,21 +222,14 @@
     "categoria": "Piel",
     "estado": "venta_libre",
     "uso_general": "Corticosteroide utilizado para tratar inflamación, picazón y alergias en la piel.",
-    "presentaciones_comunes": [
-      "Crema",
-      "Ungüento",
-      "Loción"
-    ],
+    "presentaciones_comunes": ["Crema", "Ungüento", "Loción"],
     "requiere_receta": "Depende de la concentración. Las de baja dosis suelen ser de venta libre.",
     "advertencias": [
       "No aplicar en heridas abiertas o infecciones.",
       "Evitar uso prolongado en la misma área.",
       "No aplicar cerca de los ojos sin indicación médica."
     ],
-    "efectos_secundarios_comunes": [
-      "Ardor leve al aplicar",
-      "Sequedad de la piel"
-    ],
+    "efectos_secundarios_comunes": ["Ardor leve al aplicar", "Sequedad de la piel"],
     "efectos_secundarios_graves": [
       "Adelgazamiento de la piel con uso prolongado",
       "Cambios en la pigmentación"
@@ -318,9 +242,7 @@
       "Puede reducir efectividad de algunos tratamientos tópicos antifúngicos."
     ],
     "uso_seguro": "Aplicar una capa delgada en la zona afectada. No cubrir con vendajes herméticos sin indicación.",
-    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
-    "edad_orientativa": "Uso tópico común en adolescentes y adultos. En niños pequeños consultar.",
-    "apto_para": "Personas con inflamación o picazón en la piel; evitar uso prolongado."
+    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico."
   },
   {
     "id": 9,
@@ -329,22 +251,14 @@
     "categoria": "Dolor y fiebre",
     "estado": "requiere_receta",
     "uso_general": "Antiinflamatorio no esteroideo usado para dolor muscular, articular y procesos inflamatorios.",
-    "presentaciones_comunes": [
-      "Tabletas",
-      "Gel tópico",
-      "Inyectable"
-    ],
+    "presentaciones_comunes": ["Tabletas", "Gel tópico", "Inyectable"],
     "requiere_receta": "Sí, para uso oral e inyectable. El gel tópico suele ser de venta libre.",
     "advertencias": [
       "No usar por períodos prolongados sin supervisión médica.",
       "Tomar con alimentos para reducir molestias estomacales.",
       "Precaución en personas con presión arterial alta."
     ],
-    "efectos_secundarios_comunes": [
-      "Dolor de estómago",
-      "Dolor de cabeza",
-      "Mareos"
-    ],
+    "efectos_secundarios_comunes": ["Dolor de estómago", "Dolor de cabeza", "Mareos"],
     "efectos_secundarios_graves": [
       "Sangrado gastrointestinal",
       "Problemas cardiovasculares",
@@ -359,9 +273,7 @@
       "Evitar combinar con otros antiinflamatorios no esteroideos."
     ],
     "uso_seguro": "Usar la menor dosis efectiva durante el menor tiempo posible.",
-    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
-    "edad_orientativa": "Uso en adultos. En niños y adolescentes solo si lo indica un profesional.",
-    "apto_para": "Adultos con dolor o inflamación; evitar automedicación prolongada."
+    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico."
   },
   {
     "id": 10,
@@ -370,22 +282,14 @@
     "categoria": "Alergias",
     "estado": "venta_libre",
     "uso_general": "Antihistamínico de segunda generación usado para aliviar síntomas de alergia con menor somnolencia.",
-    "presentaciones_comunes": [
-      "Tabletas",
-      "Gotas",
-      "Jarabe"
-    ],
+    "presentaciones_comunes": ["Tabletas", "Gotas", "Jarabe"],
     "requiere_receta": "Generalmente no requiere receta.",
     "advertencias": [
       "Puede causar somnolencia leve en algunas personas.",
       "Precaución al conducir hasta conocer la reacción individual.",
       "Consultar antes de usar durante el embarazo."
     ],
-    "efectos_secundarios_comunes": [
-      "Somnolencia leve",
-      "Boca seca",
-      "Fatiga"
-    ],
+    "efectos_secundarios_comunes": ["Somnolencia leve", "Boca seca", "Fatiga"],
     "efectos_secundarios_graves": [
       "Reacciones alérgicas",
       "Dificultad para respirar"
@@ -399,8 +303,7 @@
       "Evitar combinar con alcohol."
     ],
     "uso_seguro": "Tomar una vez al día según lo indicado en el empaque.",
-    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
-    "edad_orientativa": "Se usa en adultos y niños según presentación y dosis. En menores consultar.",
-    "apto_para": "Adultos, adolescentes y algunos niños según la presentación; precaución renal."
+    "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico."
   }
 ]
+;
