@@ -1,6 +1,7 @@
 function renderSharedUI() {
   const page = document.body.dataset.page || "home";
 
+  // Definimos aquí los enlaces principales para reutilizarlos en toda la web.
   const navItems = [
     { href: "index.html", label: "Inicio", key: "home" },
     { href: "buscar.html", label: "Buscar medicamento", key: "buscar" },
@@ -15,7 +16,7 @@ function renderSharedUI() {
     )
     .join("");
 
-  // Estado de sesión (simulado con localStorage, ver auth.js).
+  // Aquí decidimos si mostramos saludo/cerrar sesión o el link de login.
   const sesionActiva = typeof obtenerSesion === "function" ? obtenerSesion() : null;
   const authBox = sesionActiva
     ? `<div class="nav-auth">
@@ -28,6 +29,7 @@ function renderSharedUI() {
 
   const header = document.getElementById("site-header");
   if (header) {
+    // La navbar se inyecta en todas las páginas desde este archivo.
     header.innerHTML = `
       <nav>
         <a href="index.html" class="logo">
@@ -42,6 +44,7 @@ function renderSharedUI() {
 
   const footer = document.getElementById("site-footer");
   if (footer) {
+    // El footer también se comparte para no repetir HTML en cada página.
     footer.innerHTML = `
       <footer class="site-footer">
         <div class="footer-inner">

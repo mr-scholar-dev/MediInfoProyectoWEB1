@@ -27,6 +27,7 @@ function activarValidacionEnTiempoReal() {
   get("motivo").addEventListener("input", () => validarCampoObligatorio("motivo", "error-motivo"));
 }
 
+// Marca visualmente si un campo obligatorio quedó vacío.
 function validarCampoObligatorio(idCampo, idError) {
   const campo = get(idCampo);
   const error = get(idError);
@@ -49,6 +50,7 @@ function verificarPermisoNotificacion() {
   }
 }
 
+// Pide permiso al navegador para poder enviar alertas cuando toque una alarma.
 function pedirPermisoNotificacion() {
   if (!("Notification" in window)) return;
   Notification.requestPermission().then((perm) => {
@@ -95,6 +97,7 @@ function iniciarCheckerAlarmas() {
 
 /* ── Alarmas en formulario ──────────────────────── */
 
+// Agrega otro campo de hora, hasta un máximo de tres alarmas.
 function agregarAlarma() {
   const slots = get("alarm-slots");
   if (slots.children.length >= 3) return;
@@ -116,12 +119,14 @@ function quitarAlarma(btn) {
   btn.parentElement.remove();
 }
 
+// Junta todas las horas escritas en el formulario antes de guardar.
 function obtenerAlarmasFormulario() {
   return Array.from(document.querySelectorAll(".alarm-time"))
     .map((i) => i.value.trim())
     .filter(Boolean);
 }
 
+// Deja el formulario de alarmas en su estado inicial.
 function limpiarAlarmasFormulario() {
   const slots = get("alarm-slots");
   slots.innerHTML = `
@@ -133,6 +138,7 @@ function limpiarAlarmasFormulario() {
 
 /* ── CRUD ───────────────────────────────────────── */
 
+// Guarda un medicamento nuevo o actualiza uno que ya estaba editándose.
 function guardarMedicamento(evento) {
   evento.preventDefault();
 
@@ -181,6 +187,7 @@ function guardarMedicamento(evento) {
   mostrarMedicamentosGuardados();
 }
 
+// Carga un medicamento en el formulario para poder modificarlo.
 function editarMedicamento(id) {
   const med = obtenerLista().find((m) => m.id === id);
   if (!med) return;
@@ -212,6 +219,7 @@ function editarMedicamento(id) {
   document.querySelector(".mismeds-form-panel").scrollIntoView({ behavior: "smooth" });
 }
 
+// Cancela la edición y devuelve el formulario a modo "nuevo".
 function cancelarEdicion() {
   editandoId = null;
   get("form-medicamento").reset();
@@ -221,6 +229,7 @@ function cancelarEdicion() {
   get("form-medicamento").querySelector(".btn-guardar").textContent = "Guardar medicamento";
 }
 
+// Lee la lista personal guardada para el usuario actual.
 function obtenerLista() {
   try {
     return JSON.parse(localStorage.getItem(claveMisMedicamentos()) || "[]");
@@ -229,10 +238,12 @@ function obtenerLista() {
   }
 }
 
+// Vuelve a guardar la lista del usuario en localStorage.
 function guardarLista(lista) {
   localStorage.setItem(claveMisMedicamentos(), JSON.stringify(lista));
 }
 
+// Pinta el diario con tarjetas, contadores y acciones.
 function mostrarMedicamentosGuardados() {
   const contenedor = get("lista-guardados");
   const lista = obtenerLista();
@@ -254,6 +265,7 @@ function mostrarMedicamentosGuardados() {
   lista.forEach((med) => contenedor.appendChild(crearDiaryCard(med)));
 }
 
+// Construye una tarjeta individual para cada medicamento guardado.
 function crearDiaryCard(med) {
   const card = document.createElement("div");
   card.className = `diary-card${med.estado === "finalizado" ? " finalizado" : ""}`;
@@ -298,6 +310,7 @@ function crearDiaryCard(med) {
   return card;
 }
 
+// Cambia el estado entre activo y finalizado.
 function toggleEstado(id) {
   const lista = obtenerLista().map((med) => {
     if (med.id === id) med.estado = med.estado === "activo" ? "finalizado" : "activo";
@@ -307,6 +320,7 @@ function toggleEstado(id) {
   mostrarMedicamentosGuardados();
 }
 
+// Elimina un medicamento concreto del diario.
 function eliminarMedicamento(id) {
   if (!confirm("¿Seguro que querés eliminar este medicamento?")) return;
   guardarLista(obtenerLista().filter((med) => med.id !== id));
@@ -326,6 +340,7 @@ function vaciarRegistros() {
   alert("Se eliminaron todos los registros.");
 }
 
+// Convierte YYYY-MM-DD a DD/MM/YYYY para que sea más legible.
 function formatearFecha(fechaStr) {
   const [anio, mes, dia] = fechaStr.split("-");
   return `${dia}/${mes}/${anio}`;

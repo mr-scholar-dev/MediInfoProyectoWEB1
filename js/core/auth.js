@@ -23,6 +23,7 @@ function obtenerUsuarios() {
   }
 }
 
+// Guarda la lista completa de usuarios otra vez en localStorage.
 function guardarUsuarios(lista) {
   localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(lista));
 }

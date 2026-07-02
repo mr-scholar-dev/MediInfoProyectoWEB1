@@ -95,6 +95,7 @@ async function cargarCategoriasDesdeJSON() {
   }
 }
 
+// Obtiene el catálogo desde el respaldo local o desde el JSON, según exista.
 async function obtenerMedicamentos() {
   if (Array.isArray(window.MEDICAMENTOS_DATA)) return window.MEDICAMENTOS_DATA;
 
@@ -103,6 +104,7 @@ async function obtenerMedicamentos() {
   return respuesta.json();
 }
 
+// Dibuja partículas muy suaves solo en la hero principal de la home.
 function iniciarParticulasHero() {
   const canvas = document.getElementById("particle-canvas");
   const hero = document.querySelector(".hero-tesla");
@@ -119,6 +121,7 @@ function iniciarParticulasHero() {
   let hasMouse = false;
   let running = false;
 
+  // Ajusta el canvas al tamaño real del bloque para evitar deformaciones.
   const resize = () => {
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     const rect = hero.getBoundingClientRect();
@@ -131,6 +134,7 @@ function iniciarParticulasHero() {
 
   const rand = (min, max) => Math.random() * (max - min) + min;
 
+  // Cada partícula guarda posición, velocidad y brillo propios.
   const createParticle = () => ({
     x: rand(0, hero.clientWidth),
     y: rand(0, hero.clientHeight),
@@ -141,6 +145,7 @@ function iniciarParticulasHero() {
     hue: rand(206, 223),
   });
 
+  // Cuando una partícula sale del área, la reubicamos para seguir animando.
   const resetParticle = (p) => {
     p.x = rand(0, hero.clientWidth);
     p.y = hero.clientHeight + rand(10, 90);
@@ -151,6 +156,7 @@ function iniciarParticulasHero() {
     p.hue = rand(206, 223);
   };
 
+  // Render principal de la animación.
   const draw = () => {
     if (!running) return;
     ctx.clearRect(0, 0, hero.clientWidth, hero.clientHeight);
@@ -190,6 +196,7 @@ function iniciarParticulasHero() {
   for (let i = 0; i < total; i++) particles.push(createParticle());
   resize();
 
+  // El mouse empuja las partículas un poco para dar sensación de vida.
   const handleMove = (event) => {
     const rect = hero.getBoundingClientRect();
     mouseX = event.clientX - rect.left;
@@ -201,6 +208,7 @@ function iniciarParticulasHero() {
     hasMouse = false;
   };
 
+  // Encendemos o apagamos la animación según si la hero está visible.
   const start = () => {
     if (running) return;
     running = true;

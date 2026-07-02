@@ -32,6 +32,7 @@ function mostrarTab(tab) {
   get("form-registro").style.display = esLogin ? "none" : "block";
 }
 
+// Valida que un campo no quede vacío antes de mandar el formulario.
 function validarNoVacio(idCampo, idError) {
   const valido = get(idCampo).value.trim().length > 0;
   get(idCampo).classList.toggle("invalid", !valido);
@@ -39,6 +40,7 @@ function validarNoVacio(idCampo, idError) {
   return valido;
 }
 
+// Revisa que el usuario tenga el mínimo de caracteres para registrarse.
 function validarRegistroUsuario() {
   const valido = get("registro-usuario").value.trim().length >= 3;
   get("registro-usuario").classList.toggle("invalid", !valido);
@@ -46,6 +48,7 @@ function validarRegistroUsuario() {
   return valido;
 }
 
+// Comprueba largo y coincidencia de las dos contraseñas del registro.
 function validarRegistroClaves() {
   const clave = get("registro-clave").value;
   const confirmar = get("registro-clave-confirmar").value;
@@ -61,6 +64,7 @@ function validarRegistroClaves() {
   return claveValida && coinciden;
 }
 
+// Procesa el login y redirige a la página que el usuario quería abrir.
 function manejarLogin(evento) {
   evento.preventDefault();
 
@@ -88,6 +92,7 @@ function manejarLogin(evento) {
   }, 900);
 }
 
+// Crea la cuenta nueva y luego devuelve al usuario a su destino.
 function manejarRegistro(evento) {
   evento.preventDefault();
 

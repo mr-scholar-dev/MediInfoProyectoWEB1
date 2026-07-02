@@ -475,6 +475,37 @@ nav ul li a.active {
   font-weight: 600;
 }
 
+.uso-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: rgba(245,245,247,0.92);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.uso-badge-adultos {
+  background: rgba(26, 86, 219, 0.12);
+  color: #93BBFD;
+  border-color: rgba(26, 86, 219, 0.26);
+}
+
+.uso-badge-pediátrico,
+.uso-badge-pediatrico {
+  background: rgba(48, 209, 88, 0.12);
+  color: #8ef0a6;
+  border-color: rgba(48, 209, 88, 0.26);
+}
+
+.uso-badge-mixto {
+  background: rgba(255, 214, 10, 0.12);
+  color: #ffe873;
+  border-color: rgba(255, 214, 10, 0.26);
+}
+
 .hero-botones,
 .legal-links,
 .ficha-botones,
