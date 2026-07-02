@@ -39,7 +39,8 @@
     "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
     "edad_orientativa": "Uso común en adolescentes y adultos. En niños pequeños consultar pediatría.",
     "apto_para": "Adolescentes y adultos; en embarazo, lactancia o enfermedad hepática consultar.",
-    "grupo_uso": "Pediátrico"
+    "grupo_uso": "Mixto",
+    "poblacion": "Niños y adultos"
   },
   {
     "id": 2,
@@ -82,7 +83,8 @@
     "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
     "edad_orientativa": "Uso frecuente en adolescentes y adultos. En niños depende de la dosis indicada por un profesional.",
     "apto_para": "Adolescentes y adultos; precaución en personas con gastritis, úlcera o problemas renales.",
-    "grupo_uso": "Pediátrico"
+    "grupo_uso": "Mixto",
+    "poblacion": "Niños y adultos"
   },
   {
     "id": 3,
@@ -124,7 +126,8 @@
     "nota_importante": "Esta información es educativa. Los antibióticos solo deben usarse con prescripción médica.",
     "edad_orientativa": "Puede usarse en niños y adultos solo con indicación médica y ajuste de dosis.",
     "apto_para": "Niños, adolescentes y adultos bajo receta. Requiere evaluación médica previa.",
-    "grupo_uso": "Pediátrico"
+    "grupo_uso": "Mixto",
+    "poblacion": "Niños y adultos"
   },
   {
     "id": 4,
@@ -166,7 +169,8 @@
     "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
     "edad_orientativa": "Se usa en adolescentes y adultos; en niños y embarazadas consultar antes.",
     "apto_para": "Adolescentes y adultos; en embarazo, lactancia o enfermedad hepática consultar.",
-    "grupo_uso": "Pediátrico"
+    "grupo_uso": "Mixto",
+    "poblacion": "Niños y adultos"
   },
   {
     "id": 5,
@@ -207,7 +211,8 @@
     "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
     "edad_orientativa": "Más usado en adolescentes y adultos. En niños y tratamientos largos consultar.",
     "apto_para": "Adolescentes y adultos; precaución si hay reflujo persistente o uso prolongado.",
-    "grupo_uso": "Pediátrico"
+    "grupo_uso": "Adultos",
+    "poblacion": "Adultos"
   },
   {
     "id": 6,
@@ -247,7 +252,8 @@
     "nota_importante": "Esta información es educativa. La diabetes requiere seguimiento médico continuo.",
     "edad_orientativa": "Uso en adultos y algunos adolescentes según criterio médico.",
     "apto_para": "Principalmente adultos con diabetes tipo 2 bajo seguimiento médico.",
-    "grupo_uso": "Mixto"
+    "grupo_uso": "Adultos",
+    "poblacion": "Adultos"
   },
   {
     "id": 7,
@@ -289,7 +295,8 @@
     "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
     "edad_orientativa": "Puede usarse en adultos y algunos niños, pero en mayores de edad avanzada da más sueño.",
     "apto_para": "Adultos y población pediátrica según presentación; precaución en adultos mayores.",
-    "grupo_uso": "Pediátrico"
+    "grupo_uso": "Mixto",
+    "poblacion": "Niños y adultos"
   },
   {
     "id": 8,
@@ -328,7 +335,8 @@
     "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
     "edad_orientativa": "Uso tópico común en adolescentes y adultos. En niños pequeños consultar.",
     "apto_para": "Personas con inflamación o picazón en la piel; evitar uso prolongado.",
-    "grupo_uso": "Pediátrico"
+    "grupo_uso": "Mixto",
+    "poblacion": "Niños y adultos"
   },
   {
     "id": 9,
@@ -370,7 +378,8 @@
     "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
     "edad_orientativa": "Uso en adultos. En niños y adolescentes solo si lo indica un profesional.",
     "apto_para": "Adultos con dolor o inflamación; evitar automedicación prolongada.",
-    "grupo_uso": "Pediátrico"
+    "grupo_uso": "Adultos",
+    "poblacion": "Adultos"
   },
   {
     "id": 10,
@@ -411,6 +420,7 @@
     "nota_importante": "Esta información es educativa y no sustituye la orientación de un médico.",
     "edad_orientativa": "Se usa en adultos y niños según presentación y dosis. En menores consultar.",
     "apto_para": "Adultos, adolescentes y algunos niños según la presentación; precaución renal.",
-    "grupo_uso": "Pediátrico"
+    "grupo_uso": "Mixto",
+    "poblacion": "Niños y adultos"
   }
 ]

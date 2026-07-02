@@ -110,14 +110,14 @@ function crearTarjetaMedicamento(med) {
   const cfg = CATEGORIA_CONFIG[med.categoria] || { color: "#1D6FEB" };
   const etiquetaEstado = med.estado === "requiere_receta" ? "Requiere receta" : "Venta libre";
   const presentacion = med.presentaciones_comunes?.[0] || "Presentaciones variadas";
-  const grupoUso = med.grupo_uso || "Mixto";
+  const poblacion = med.poblacion || "Niños y adultos";
 
   tarjeta.style.setProperty("--cat-color", cfg.color);
 
   tarjeta.innerHTML = `
     <div class="card-med-top">
       <span class="categoria-badge" style="background:${cfg.color}12;color:${cfg.color};border-color:${cfg.color}24">${med.categoria}</span>
-      <span class="uso-badge uso-badge-${grupoUso.toLowerCase()}">${grupoUso}</span>
+      <span class="uso-badge ${poblacion === "Adultos" ? "uso-badge-adultos" : "uso-badge-mixto"}">${poblacion}</span>
       <span class="estado-badge">${etiquetaEstado}</span>
     </div>
     <h3 class="card-med-nombre">${med.nombre}</h3>
@@ -141,7 +141,7 @@ function mostrarFicha(med) {
   get("ficha-nombre").textContent = med.nombre;
   get("ficha-generico").textContent = `Nombre genérico: ${med.nombre_generico}`;
   get("ficha-categoria").textContent = med.categoria;
-  get("ficha-grupo-uso").textContent = med.grupo_uso || "Mixto";
+  get("ficha-poblacion").textContent = med.poblacion || "Niños y adultos";
   get("ficha-uso").textContent = med.uso_general;
   get("ficha-edad").textContent = med.edad_orientativa || "No especificado";
   get("ficha-apto").textContent = med.apto_para || "No especificado";

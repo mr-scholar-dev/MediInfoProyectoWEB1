@@ -493,13 +493,6 @@ nav ul li a.active {
   border-color: rgba(26, 86, 219, 0.26);
 }
 
-.uso-badge-pediátrico,
-.uso-badge-pediatrico {
-  background: rgba(48, 209, 88, 0.12);
-  color: #8ef0a6;
-  border-color: rgba(48, 209, 88, 0.26);
-}
-
 .uso-badge-mixto {
   background: rgba(255, 214, 10, 0.12);
   color: #ffe873;
