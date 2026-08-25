@@ -1,0 +1,6 @@
+import { CatalogPage } from '../modules/catalog/CatalogPage'
+type CatalogItem = { id: number; nombre: string; descripcion?: string; activo?: boolean }
+const columns = [{ label: 'Nombre', render: (item: CatalogItem) => <strong>{item.nombre}</strong> }, { label: 'Descripción', render: (item: CatalogItem) => item.descripcion || 'Sin descripción' }, { label: 'Estado', render: (item: CatalogItem) => <span className="status status-green">{item.activo === false ? 'Inactivo' : 'Activo'}</span> }]
+export function RolesPage() { return <CatalogPage<CatalogItem> title="Roles" eyebrow="Catálogo de solo lectura" description="Roles definidos por el API para controlar permisos." endpoint="/roles" empty="No hay roles disponibles" columns={columns} /> }
+export function SpecialtiesPage() { return <CatalogPage<CatalogItem> title="Especialidades" eyebrow="Catálogo de solo lectura" description="Especialidades disponibles para servicios y empleados." endpoint="/especialidades" empty="No hay especialidades disponibles" columns={columns} /> }
+export function AppointmentStatusesPage() { return <CatalogPage<CatalogItem> title="Estados de cita" eyebrow="Catálogo de solo lectura" description="Estados que controlan el ciclo de vida de una cita." endpoint="/estados-cita" empty="No hay estados disponibles" columns={columns} /> }

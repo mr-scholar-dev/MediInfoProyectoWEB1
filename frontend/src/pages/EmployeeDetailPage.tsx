@@ -1,0 +1,17 @@
+import { ArrowLeft, CalendarDays, Edit3, LoaderCircle, Power } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { api } from '../services/api'
+import './detail.css'
+
+type Employee = { id: number; codigoEmpleado: string; descripcion?: string; activo?: boolean; usuario?: { nombre?: string; primerApellido?: string; correo?: string }; especialidad?: { nombre: string }; servicios?: { id: number; nombre: string }[]; cantidadCitas?: number }
+function messageFrom(cause: unknown) { return cause instanceof Error ? cause.message : 'Ocurrió un error inesperado.' }
+
+export function EmployeeDetailPage() {
+  const { id } = useParams(); const navigate = useNavigate(); const [employee, setEmployee] = useState<Employee>(); const [error, setError] = useState(''); const [changing, setChanging] = useState(false)
+  useEffect(() => { if (!id) return; api.get<Employee>(`/empleados/${id}`).then(setEmployee).catch(cause => setError(messageFrom(cause))) }, [id])
+  async function toggleState() { if (!employee) return; setChanging(true); setError(''); try { await api.patch(`/empleados/${employee.id}/estado`, { activo: employee.activo === false }); navigate(0) } catch (cause) { setError(messageFrom(cause)) } finally { setChanging(false) } }
+  if (!employee) return <section className="page-shell"><div className="empty-state">{error ? <p>{error}</p> : <><LoaderCircle className="spin" size={24} /><p>Cargando empleado...</p></>}</div></section>
+  const fullName = `${employee.usuario?.nombre || employee.codigoEmpleado} ${employee.usuario?.primerApellido || ''}`.trim()
+  return <section className="page-shell"><Link className="back-link" to="/empleados"><ArrowLeft size={14} /> Volver a empleados</Link><div className="section-heading"><div><p className="eyebrow">Detalle de empleado</p><h1>{fullName}</h1><p className="lead">Información general y servicios asignados.</p></div><div className="action-inline"><Link className="secondary-button" to={`/empleados/${id}/editar`}><Edit3 size={16} /> Editar</Link><Link className="primary-button" to={`/agenda?empleado=${id}`}><CalendarDays size={16} /> Ver agenda</Link></div></div>{error && <div className="form-error">{error}</div>}<div className="detail-grid"><article className="panel"><p className="eyebrow">Información</p><h2>Datos generales</h2><div className="detail-list"><div><span>Código</span><strong>{employee.codigoEmpleado}</strong></div><div><span>Correo</span><strong>{employee.usuario?.correo || 'Sin correo'}</strong></div><div><span>Especialidad</span><strong>{employee.especialidad?.nombre || 'Sin especialidad'}</strong></div><div><span>Citas asignadas</span><strong>{employee.cantidadCitas ?? 0}</strong></div><div><span>Estado</span><strong className={`status ${employee.activo === false ? 'status-gray' : 'status-green'}`}>{employee.activo === false ? 'Inactivo' : 'Activo'}</strong></div></div><button className="secondary-button" onClick={toggleState} disabled={changing}><Power size={16} /> {changing ? 'Actualizando...' : employee.activo === false ? 'Activar empleado' : 'Desactivar empleado'}</button></article><article className="panel"><p className="eyebrow">Capacidades</p><h2>Servicios asignados</h2><div className="tag-list">{employee.servicios?.map(service => <span className="status status-blue" key={service.id}>{service.nombre}</span>)}{!employee.servicios?.length && <p>Sin servicios asignados.</p>}</div></article></div></section>
+}

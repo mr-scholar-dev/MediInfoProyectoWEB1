@@ -1,0 +1,3 @@
+import { ReadOnlyDetailPage } from '../modules/catalog/ReadOnlyDetailPage'
+type Schedule = { id: number; diaSemana?: { nombre: string }; horaInicio: string; horaFin: string; activo?: boolean }
+export function ScheduleDetailPage() { return <ReadOnlyDetailPage<Schedule> title="Detalle del horario" eyebrow="Configuración" endpoint="/horarios-atencion" render={item => <><h2>{item.diaSemana?.nombre || 'Día no disponible'}</h2><div className="detail-list"><div><span>Hora de inicio</span><strong>{item.horaInicio}</strong></div><div><span>Hora de finalización</span><strong>{item.horaFin}</strong></div><div><span>Estado</span><strong>{item.activo === false ? 'Inactivo' : 'Activo'}</strong></div></div></>} /> }
