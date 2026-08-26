@@ -213,3 +213,54 @@ cd /Users/isaacsaidserrano/Desktop/api-citas/api
 npm run seed:demo
 ```
 
+## 12. Qué revisar antes de presentar
+
+Antes de la defensa, conviene confirmar estas tres cosas:
+
+- que el frontend levante con `npm run dev`
+- que el backend/API esté corriendo con `npm run server`
+- que MySQL de XAMPP esté encendido
+
+Si algo falla, normalmente el orden correcto para levantar todo es:
+
+1. Abrir XAMPP y encender `MySQL`
+2. Levantar el backend
+3. Levantar el frontend
+4. Entrar al sistema con `admin@citas.com` y `Admin12345`
+
+## 13. Qué mostrar en pantalla
+
+Si querés ir seguro, mostrá este recorrido:
+
+1. Login
+2. Resumen general
+3. Servicios
+4. Detalle de un servicio
+5. Empleados
+6. Agenda diaria
+7. Restricciones
+8. Crear una cita
+9. Ver el detalle de la cita
+
+## 14. Resumen para decir en 30 segundos
+
+> Este proyecto es una interfaz en React para gestionar citas médicas. Consume un API ya existente, respeta roles de usuario, muestra servicios, empleados, horarios, restricciones y citas, y valida la disponibilidad antes de registrar o editar una cita. También incluye datos de demostración para poder presentar el sistema con información real.
+
+## 15. Links útiles
+
+Frontend del proyecto:
+
+- `frontend/`
+
+Guía de estudio:
+
+- `frontend/docs/GUIA_DEFENSA_PROYECTO.md`
+
+Backend/API:
+
+- `/Users/isaacsaidserrano/Desktop/api-citas/api`
+
+Credenciales de prueba:
+
+- correo: `admin@citas.com`
+- contraseña: `Admin12345`

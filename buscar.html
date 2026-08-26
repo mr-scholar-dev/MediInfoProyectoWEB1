@@ -14,13 +14,13 @@
   <div id="site-header"></div>
 
   <main class="contenedor">
-    <div class="page-hero">
+    <div class="page-intro page-hero">
       <div>
         <div class="page-kicker">Consulta rápida</div>
         <h1>Buscar medicamento</h1>
         <p>Buscá un medicamento por su nombre o filtrá por categoría para ver su información educativa.</p>
       </div>
-      <div class="page-tip">
+      <div class="page-callout page-tip">
         <span>Cómo usarlo</span>
         <p>Escribí un nombre, elegí una categoría o abrí una ficha para ver advertencias, usos y recomendaciones.</p>
       </div>
@@ -32,21 +32,21 @@
     </div>
 
     <!-- Controles de búsqueda y filtro -->
-    <div class="search-bar-wrapper">
-      <div class="search-bar-input-wrap">
+    <div class="search-controls search-bar-wrapper">
+      <div class="search-input-wrap search-bar-input-wrap">
         <label for="buscador" class="visually-hidden">Buscar medicamento por nombre</label>
         <svg class="search-bar-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input
           type="text"
           id="buscador"
-          class="search-bar-input"
+          class="search-input search-bar-input"
           placeholder="Buscar medicamento por nombre..."
           oninput="filtrarMedicamentos()"
           autocomplete="off"
         />
       </div>
 
-      <div class="search-filter-chips" id="filter-chips">
+      <div class="category-filters search-filter-chips" id="filter-chips">
         <button class="chip chip-active" data-cat="" onclick="seleccionarChip(this, '')">Todos</button>
         <button class="chip" data-cat="Dolor y fiebre" onclick="seleccionarChip(this, 'Dolor y fiebre')">💊 Dolor y fiebre</button>
         <button class="chip" data-cat="Antibióticos" onclick="seleccionarChip(this, 'Antibióticos')">🦠 Antibióticos</button>
@@ -68,7 +68,7 @@
         <option value="Piel">Piel</option>
       </select>
 
-      <div class="filtro-estado-wrap">
+      <div class="sales-filter filtro-estado-wrap">
         <label for="filtro-estado">Tipo de venta</label>
         <select id="filtro-estado" onchange="filtrarMedicamentos()">
           <option value="">Todos</option>
