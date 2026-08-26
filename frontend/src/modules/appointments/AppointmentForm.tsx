@@ -30,6 +30,14 @@ function messageFrom(cause: unknown) { return cause instanceof Error ? cause.mes
 function employeeName(item: Employee) { return `${item.usuario?.nombre || 'Empleado'} ${item.usuario?.primerApellido || ''}`.trim() }
 function employeeServiceIds(item: Employee) { return item.servicioIds || (item.servicios ? item.servicios.map(service => service.id) : undefined) }
 
+// ============================================================================
+// Proceso principal del sistema: crear/editar una cita.
+// Integra todos los módulos: cliente, servicio y adicionales (costo/duración
+// automáticos), empleado (filtrado por servicio asignado), fecha/hora, agenda
+// del empleado (horario + citas + restricciones) y validación de disponibilidad
+// local + consulta al API antes de permitir guardar. Reutilizado por
+// NewAppointmentPage y EditAppointmentPage (prop `appointment`).
+// ============================================================================
 export function AppointmentForm({ appointment }: { appointment?: ExistingAppointment }) {
   const { user } = useAuth(); const navigate = useNavigate()
   const editing = Boolean(appointment)

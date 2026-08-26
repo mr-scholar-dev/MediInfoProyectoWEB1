@@ -47,6 +47,10 @@ export function buildDaySegments(ranges: ScheduleRange[], citas: EmployeeAppoint
 
 export type ValidationInput = { fecha: string; horaInicio: string; horaFin: string; hoy: string; ranges: ScheduleRange[]; citas: EmployeeAppointment[]; restricciones: EmployeeRestriction[]; citaIdExcluir?: number }
 
+// Validación local de disponibilidad (además de la del backend). Comprueba,
+// en este orden, las reglas del enunciado: fecha no pasada, día activo del
+// horario, dentro del horario de atención, restricciones (generales y del
+// empleado) y traslapes con otras citas activas del empleado.
 // Devuelve un mensaje de error en español o cadena vacía si el horario es válido.
 export function validateAppointment(input: ValidationInput): string {
   const { fecha, horaInicio, horaFin, hoy, ranges, citas, restricciones, citaIdExcluir } = input

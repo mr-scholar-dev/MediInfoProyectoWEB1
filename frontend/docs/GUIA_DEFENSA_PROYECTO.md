@@ -1,266 +1,156 @@
-# Guía rápida para defender el proyecto
+# Guía para defender el proyecto — MediInfo (Gestión de Citas)
 
-Este documento sirve como apoyo para explicar el proyecto antes de la presentación.
+Apoyo para la presentación. Resume **qué decir**, **qué mostrar** y **dónde está
+cada cosa en el código**. Para el detalle técnico ver `ARQUITECTURA.md`.
 
-## 1. Qué es el proyecto
+> Login de demo: **admin@citas.com** / **Admin12345**
 
-Es una aplicación web para gestión de citas médicas hecha en React.
+---
 
-La interfaz consume un API ya existente para manejar:
+## 1. Resumen en una frase
 
-- usuarios
-- servicios
-- servicios adicionales
-- empleados
-- horarios
-- restricciones
-- citas
-- agenda diaria
+FrontEnd en **React + TypeScript** que consume un **API REST externo** para
+gestionar citas médicas. Interfaz construida con **Tailwind CSS + shadcn/ui**,
+con un tema propio "negro industrial". No inventa datos locales: **todo sale del
+API** a través de una capa de servicios.
 
-## 2. Idea general de la arquitectura
+---
 
-La arquitectura está separada en dos partes:
+## 2. Stack y aspectos técnicos obligatorios (cómo lo cumplimos)
 
-- Frontend: la interfaz hecha con React
-- Backend: API ya provista por el proyecto original
+- **React** (useState, useEffect, props, hooks, componentes) → toda la app.
+- **React Router** con **rutas protegidas** por sesión y por rol →
+  `src/App.tsx`, `components/auth/`.
+- **Servicios para consumir el API** (GET/POST/PUT/PATCH, manejo de errores,
+  loading y estados vacíos) → `src/services/api.ts`.
+- **Context** para autenticación → `src/context/AuthContext.tsx`.
+- **Tailwind + shadcn/ui** con variables de tema, diseño responsive y
+  componentes reutilizables → `src/tailwind.css` (puente de tokens) y
+  `src/components/ui/`.
+- **Layout principal** (sidebar + topbar) → `components/layout/AppLayout.tsx`.
+- **Organización modular** → `modules/`, `pages/`, `components/`.
 
-El frontend no inventa datos locales para trabajar.
-Todo se consulta desde el API.
+Si preguntan "¿dónde está X?", la respuesta casi siempre es una de esas rutas.
 
-## 3. Qué hace el frontend
+---
 
-El frontend se encarga de:
+## 3. Recorrido sugerido para la demo
 
-- iniciar sesión
-- registrar clientes
-- mostrar el perfil del usuario
-- listar y administrar servicios
-- listar y administrar servicios adicionales
-- listar y administrar empleados
-- consultar horarios
-- consultar restricciones
-- crear, editar, cancelar y cambiar el estado de citas
-- mostrar la agenda diaria
+1. **Login** → explicar Context, token y rol.
+2. **Resumen (dashboard)** → indicadores y colores de estado.
+3. **Citas → Nueva cita** → *el módulo estrella* (ver punto 4).
+4. **Detalle de cita** → cambio de estado y cancelar (diálogo).
+5. **Servicios / Empleados** → formularios, imagen, asignación de servicios.
+6. **Detalle de empleado** → intentar **desactivar** con citas activas.
+7. **Agenda diaria** → grilla hora × empleado.
+8. **Horarios / Restricciones** → catálogos de solo lectura.
 
-## 4. Qué se puede mostrar en la defensa
+---
+
+## 4. Qué decir en cada pantalla
 
 ### Login
+- El usuario inicia sesión contra el API; se guarda el **token**.
+- Se consulta el **perfil** para conocer el **rol**, que decide qué se muestra.
+- Código: `pages/LoginPage.tsx`, `context/AuthContext.tsx`.
 
-Podés explicar que:
-
-- el usuario inicia sesión con el API
-- el sistema guarda el token
-- según el rol, la interfaz muestra solo lo permitido
+### Permisos por rol
+- Tres roles: **Administrador, Empleado, Cliente**.
+- El menú **oculta** lo no permitido; `RoleRoute` **bloquea el acceso directo**
+  por URL. El empleado solo ve **sus** citas; el cliente solo ve/cancela **las
+  suyas** (y solo cuando el estado lo permite).
+- Código: `AppLayout.tsx`, `components/auth/RoleRoute.tsx`,
+  `pages/AppointmentsPage.tsx`.
 
 ### Servicios
-
-Podés explicar que:
-
-- se listan servicios activos e inactivos
-- se puede ver el detalle
-- se puede crear y editar
-- cada servicio tiene imagen representativa
-- la imagen se puede reemplazar en edición
+- Listado con **miniatura**, detalle, crear/editar con **carga y vista previa
+  de imagen**, activar/desactivar.
+- **No se puede desactivar** un servicio con citas pendientes/confirmadas
+  (control en el propio FrontEnd, ver punto 5).
+- Código: `pages/ServicesPage / ServiceDetailPage / NewServicePage /
+  EditServicePage`.
 
 ### Servicios adicionales
-
-Podés explicar que:
-
-- se administran extras que aumentan el costo de una cita
-- no cambian la duración
-- se pueden activar o desactivar
+- CRUD + activar/desactivar. En la cita **suman al costo pero no a la duración**.
+- Código: `pages/Additionals*`, `modules/catalog/AdditionalForm.tsx`.
 
 ### Empleados
+- CRUD, **asignación de servicios en el mismo formulario** (checkboxes), código
+  validado (letras, números, guiones y guion bajo), muestra **citas asignadas**
+  y **restricciones**.
+- Código: `pages/Employee*`, `NewEmployeePage / EditEmployeePage`.
 
-Podés explicar que:
+### Citas — proceso principal (lo más importante)
+Al crear una cita se muestran **a la vez**:
+- cliente, servicio y adicionales → **costo, duración y hora fin automáticos**;
+- empleado (solo los que tienen asignado ese servicio);
+- **agenda del empleado** para la fecha: Disponible / Cita asignada / Restricción;
+- **validación** antes de guardar: fecha no pasada, día activo, dentro del
+  horario, restricciones (generales y del empleado) y **traslapes** (las
+  canceladas no bloquean). Además se consulta `/citas/disponibilidad` en el API.
+- Editar/cancelar/cambiar estado según los **flags del estado** que da el API.
+- Código: `modules/appointments/AppointmentForm.tsx`,
+  `appointmentUtils.ts` (cálculo), `availability.ts` (reglas),
+  `pages/AppointmentDetailPage.tsx` (estado + cancelación con diálogo).
 
-- cada empleado está asociado a un usuario
-- cada empleado tiene una especialidad
-- se le asignan servicios desde el mismo formulario
-- se puede revisar su detalle y agenda
+### Agenda diaria del establecimiento (solo Administrador)
+- Selector de fecha; grilla **hora × empleado** con estado/cliente/servicio;
+  restricciones diferenciadas; clic lleva al detalle de la cita.
+- Código: `pages/AgendaPage.tsx`, `modules/agenda/AgendaGrid.tsx`.
 
-### Citas
+### Horarios y Restricciones (solo lectura)
+- Listado + detalle. La restricción muestra **ámbito** (establecimiento o
+  empleado), **fecha**, **horario**, **motivo** y **estado**.
+- Código: `pages/Schedules* / Restrictions*`, `modules/catalog/`.
 
-Podés explicar que:
+---
 
-- la cita necesita cliente, empleado y servicio
-- se calcula duración y costo total
-- el sistema consulta disponibilidad antes de guardar
-- se respetan horarios, restricciones y traslapes
-- se puede cambiar estado o cancelar
+## 5. Reglas de negocio que conviene mencionar
 
-### Agenda diaria
+- **Costo/duración**: costo = servicio + adicionales; duración = solo el
+  servicio (adicionales no la cambian). → `appointmentUtils.ts`.
+- **Disponibilidad**: se considera el intervalo completo inicio→fin; un
+  **traslape** es cualquier coincidencia; **canceladas no bloquean**,
+  pendientes/confirmadas/en proceso sí. → `availability.ts`.
+- **Desactivación bloqueada**: empleados y servicios con citas
+  **pendientes/confirmadas** no pueden desactivarse. Lo calculamos en el
+  FrontEnd contando solo las citas cuyo estado tiene `bloqueaDisponibilidad`
+  (flag del API) y mostramos el motivo en un diálogo, sin depender solo del
+  rechazo del backend. → `EmployeeDetailPage.tsx`, `ServiceDetailPage.tsx`.
+- **Estados por color**: Pendiente amarillo, Confirmada azul, Finalizada verde,
+  Cancelada rojo. → `components/ui/status-badge.tsx`.
 
-Podés explicar que:
+---
 
-- muestra horarios disponibles
-- muestra horarios ocupados
-- muestra restricciones
-- permite ver la distribución por empleado y por fecha
+## 6. Diseño (por si preguntan por Tailwind/shadcn)
 
-## 5. Qué datos iniciales se cargaron
+- Los componentes son de **shadcn/ui** (Button, Input, Select, Table, Dialog,
+  Card, Badge, Checkbox…). Se ven con el tema propio gracias a un **puente de
+  tokens** en `tailwind.css`: los nombres de shadcn (`--primary`, `--card`,
+  `--border`…) apuntan a nuestras variables de tema (`index.css`).
+- Datos numéricos (horas, precios, códigos) en **monoespaciada tabular** para el
+  aire de "instrumento de precisión".
+- Responsive y con estados de foco/selección/scroll tematizados.
 
-Se cargaron datos de demostración para cumplir la rúbrica:
+---
 
-- 1 administrador inicial
-- 2 clientes
-- 3 empleados
-- 4 especialidades
-- 9 servicios
-- 8 servicios adicionales
-- 7 horarios de atención
-- 8 restricciones
-- 13 citas
+## 7. Datos iniciales
 
-Distribución de citas:
+`scripts/seed.mjs` carga los datos mínimos del enunciado **llamando al API**
+(no toca el backend): empleados, servicios, ≥8 adicionales, horarios,
+restricciones y citas en todos los estados. Ver `docs/DATOS_INICIALES.md`.
 
-- 4 pendientes
-- 4 confirmadas
-- 3 finalizadas
-- 2 canceladas
+---
 
-## 6. Qué decir sobre el backend
+## 8. Preguntas frecuentes del docente (respuestas rápidas)
 
-Podés decir algo como:
-
-> El backend no lo desarrollamos nosotros. Fue entregado como API del proyecto. Nosotros solo consumimos sus endpoints desde React y no cambiamos su lógica principal.
-
-Si te preguntan por el seed:
-
-> El seed se usó solo para cargar datos de prueba y poder demostrar los módulos con información real durante la defensa.
-
-## 7. Puntos técnicos importantes
-
-### Manejo del API
-
-- se usa `fetch` encapsulado en un servicio
-- se centralizan errores
-- se manejan respuestas vacías
-- se usan mensajes claros al usuario
-
-### Rutas protegidas
-
-- hay rutas privadas
-- hay rutas por rol
-- si un rol no tiene permiso, no ve la opción ni puede entrar directo por URL
-
-### Validaciones
-
-Se validan cosas como:
-
-- campos obligatorios
-- formatos de datos
-- fechas válidas
-- horario disponible
-- servicios activos
-- empleados activos
-- restricciones y traslapes
-
-## 8. Rúbrica: qué ya está cubierto
-
-Ya está bastante cubierto:
-
-- autenticación
-- registro de clientes
-- perfil
-- catálogos de solo lectura
-- servicios
-- servicios adicionales
-- empleados
-- horarios
-- restricciones
-- citas
-- adicionales de la cita
-- agenda diaria
-- validaciones visibles
-- navegación y 404
-
-## 9. Qué podrías mencionar como mejoras futuras
-
-Si te preguntan qué mejorarías, podés decir:
-
-- más pruebas automáticas
-- mejor manejo visual de algunos estados
-- más refinamiento en la agenda
-- más feedback visual en formularios
-
-## 10. Guion corto para hablar
-
-Podés resumir el proyecto así:
-
-> Desarrollamos el frontend de un sistema de gestión de citas. La app consume un API ya existente, respeta roles, valida disponibilidad de horarios, administra servicios y empleados, y permite gestionar citas con reglas de negocio reales como restricciones, traslapes y estados.
-
-## 11. Comandos útiles
-
-Frontend:
-
-```bash
-cd /Users/isaacsaidserrano/Desktop/webMiniProyecto/frontend
-npm run dev
-```
-
-Backend:
-
-```bash
-cd /Users/isaacsaidserrano/Desktop/api-citas/api
-npm run server
-```
-
-Seed de demo:
-
-```bash
-cd /Users/isaacsaidserrano/Desktop/api-citas/api
-npm run seed:demo
-```
-
-## 12. Qué revisar antes de presentar
-
-Antes de la defensa, conviene confirmar estas tres cosas:
-
-- que el frontend levante con `npm run dev`
-- que el backend/API esté corriendo con `npm run server`
-- que MySQL de XAMPP esté encendido
-
-Si algo falla, normalmente el orden correcto para levantar todo es:
-
-1. Abrir XAMPP y encender `MySQL`
-2. Levantar el backend
-3. Levantar el frontend
-4. Entrar al sistema con `admin@citas.com` y `Admin12345`
-
-## 13. Qué mostrar en pantalla
-
-Si querés ir seguro, mostrá este recorrido:
-
-1. Login
-2. Resumen general
-3. Servicios
-4. Detalle de un servicio
-5. Empleados
-6. Agenda diaria
-7. Restricciones
-8. Crear una cita
-9. Ver el detalle de la cita
-
-## 14. Resumen para decir en 30 segundos
-
-> Este proyecto es una interfaz en React para gestionar citas médicas. Consume un API ya existente, respeta roles de usuario, muestra servicios, empleados, horarios, restricciones y citas, y valida la disponibilidad antes de registrar o editar una cita. También incluye datos de demostración para poder presentar el sistema con información real.
-
-## 15. Links útiles
-
-Frontend del proyecto:
-
-- `frontend/`
-
-Guía de estudio:
-
-- `frontend/docs/GUIA_DEFENSA_PROYECTO.md`
-
-Backend/API:
-
-- `/Users/isaacsaidserrano/Desktop/api-citas/api`
-
-Credenciales de prueba:
-
-- correo: `admin@citas.com`
-- contraseña: `Admin12345`
+- **¿Dónde consumen el API?** En `services/api.ts`, único punto de acceso.
+- **¿Cómo protegen las rutas?** `ProtectedRoute` (sesión) y `RoleRoute` (rol),
+  más el menú que oculta opciones.
+- **¿Cómo calculan la hora fin?** `inicio + duración del servicio`
+  (`appointmentUtils.addMinutes`).
+- **¿Qué pasa si hay traslape?** `validateAppointment` lo detecta y bloquea el
+  guardado con un mensaje; el API también lo valida.
+- **¿Usan Context?** Sí, para autenticación (`AuthContext`).
+- **¿shadcn es de verdad?** Sí, componentes en `components/ui/`; el look propio
+  viene del puente de tokens en `tailwind.css`.
