@@ -1,1 +1,0 @@
-export function StatusBadge({ value }: { value: string }) { const tone = value === 'Confirmada' ? 'status-blue' : value === 'Finalizada' || value === 'Disponible' ? 'status-green' : value === 'Cancelada' ? 'status-red' : value === 'Restricción' ? 'status-gray' : 'status-amber'; return <span className={`status ${tone}`}>{value}</span> }

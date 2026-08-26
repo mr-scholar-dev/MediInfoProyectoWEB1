@@ -1,1 +1,88 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   Puente de tokens shadcn/ui → paleta "negro industrial" MediInfo.
+   Los valores base viven en index.css (:root); aquí se exponen con
+   los nombres que esperan los componentes de shadcn y Tailwind.
+   ============================================================ */
+:root {
+  --radius: 0.6rem;
+
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--surface);
+  --card-foreground: var(--text);
+  --popover: var(--surface-2);
+  --popover-foreground: var(--text);
+
+  --primary: var(--brand);
+  --primary-foreground: #0c0e10;
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--text);
+  --muted: var(--surface-2);
+  --muted-foreground: var(--text-dim);
+  --accent: var(--surface-3);
+  --accent-foreground: var(--text);
+  --destructive: var(--status-red);
+  --destructive-foreground: #0c0e10;
+
+  --input: var(--surface-2);
+  --ring: var(--brand);
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Colores de marca y estado disponibles como utilidades */
+  --color-brand: var(--brand);
+  --color-brand-bright: var(--brand-bright);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-hairline: var(--hairline);
+  --color-text-dim: var(--text-dim);
+  --color-text-faint: var(--text-faint);
+  --color-ok: var(--status-green);
+  --color-ok-bg: var(--status-green-bg);
+  --color-info: var(--status-blue);
+  --color-info-bg: var(--status-blue-bg);
+  --color-warn: var(--status-amber);
+  --color-warn-bg: var(--status-amber-bg);
+  --color-danger: var(--status-red);
+  --color-danger-bg: var(--status-red-bg);
+
+  --font-sans: "Saira", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Saira SemiCondensed", "Saira", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+}
