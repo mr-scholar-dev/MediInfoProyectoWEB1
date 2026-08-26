@@ -9,7 +9,7 @@ import './appointment-form.css'
 
 type Service = { id: number; nombre: string; precioBase: number; duracionMinutos: number }
 type Additional = { id: number; nombre: string; precio: number }
-type Employee = { id: number; nombre?: string; primerApellido?: string; usuario?: { nombre?: string; primerApellido?: string }; servicios?: { id: number }[]; servicioIds?: number[] }
+type Employee = { id: number; usuario?: { nombre?: string; primerApellido?: string }; servicios?: { id: number }[]; servicioIds?: number[] }
 type Client = { id: number; nombre: string; primerApellido?: string }
 type Availability = { disponible: boolean; motivo: string }
 type ApiAgendaAppointment = { id: number; horaInicio: string; horaFin: string; cliente?: { nombre: string; primerApellido?: string }; servicio?: { nombre: string }; estadoCita?: { nombre: string } }
@@ -21,7 +21,7 @@ export type ExistingAppointment = { id: number; clienteId: number; empleadoId: n
 
 function unwrap<T>(value: T | { data?: T }): T { return (value && typeof value === 'object' && 'data' in value ? value.data : value) as T }
 function messageFrom(cause: unknown) { return cause instanceof Error ? cause.message : 'Ocurrió un error inesperado.' }
-function employeeName(item: Employee) { return `${item.nombre || item.usuario?.nombre || 'Empleado'} ${item.primerApellido || item.usuario?.primerApellido || ''}`.trim() }
+function employeeName(item: Employee) { return `${item.usuario?.nombre || 'Empleado'} ${item.usuario?.primerApellido || ''}`.trim() }
 function employeeServiceIds(item: Employee) { return item.servicioIds || (item.servicios ? item.servicios.map(service => service.id) : undefined) }
 
 export function AppointmentForm({ appointment }: { appointment?: ExistingAppointment }) {
