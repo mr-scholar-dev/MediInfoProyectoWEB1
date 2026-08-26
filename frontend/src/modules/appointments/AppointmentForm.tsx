@@ -11,12 +11,14 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { UserPlus } from 'lucide-react'
 import './appointment-form.css'
 
 type Service = { id: number; nombre: string; precioBase: number; duracionMinutos: number }
 type Additional = { id: number; nombre: string; precio: number }
 type Employee = { id: number; usuario?: { nombre?: string; primerApellido?: string }; servicios?: { id: number }[]; servicioIds?: number[] }
-type Client = { id: number; nombre: string; primerApellido?: string }
+type Client = { id: number; nombre: string; primerApellido?: string; correo?: string }
 type Availability = { disponible: boolean; motivo: string }
 type ApiAgendaAppointment = { id: number; horaInicio: string; horaFin: string; cliente?: { nombre: string; primerApellido?: string }; servicio?: { nombre: string }; estadoCita?: { nombre: string } }
 type EmployeeAgenda = { citas?: ApiAgendaAppointment[] }
@@ -46,7 +48,36 @@ export function AppointmentForm({ appointment }: { appointment?: ExistingAppoint
   const [extraIds, setExtraIds] = useState<number[]>(() => Array.from(new Set(appointment?.adicionalIds || []))); const [date, setDate] = useState(appointment?.fecha || ''); const [start, setStart] = useState(appointment?.horaInicio || '09:00'); const [notes, setNotes] = useState(appointment?.observaciones || '')
   const [loading, setLoading] = useState(true); const [saving, setSaving] = useState(false); const [availability, setAvailability] = useState<Availability>(); const [error, setError] = useState('')
   const [ranges, setRanges] = useState<ScheduleRange[]>([]); const [agendaCitas, setAgendaCitas] = useState<EmployeeAppointment[]>([]); const [restrictions, setRestrictions] = useState<EmployeeRestriction[]>([]); const [agendaLoading, setAgendaLoading] = useState(false); const [agendaError, setAgendaError] = useState('')
+  // Alta rápida de cliente sin salir del formulario de cita (usa el registro público del API).
+  const [newClientOpen, setNewClientOpen] = useState(false); const [newClient, setNewClient] = useState({ nombre: '', primerApellido: '', correo: '', telefono: '', password: '' }); const [savingClient, setSavingClient] = useState(false); const [clientError, setClientError] = useState(''); const [pendingClientId, setPendingClientId] = useState<number>()
   const today = new Date().toISOString().slice(0, 10)
+
+  // Cuando el cliente recién creado ya aparece en la lista, se selecciona.
+  useEffect(() => { if (pendingClientId && clients.some(item => item.id === pendingClientId)) { setClientId(pendingClientId); setPendingClientId(undefined) } }, [clients, pendingClientId])
+
+  const updateNewClient = (key: keyof typeof newClient, value: string) => setNewClient(current => ({ ...current, [key]: value }))
+  // Crea un cliente con el endpoint público (/usuarios/registro), recarga la
+  // lista y lo deja seleccionado en la cita. No crea endpoints nuevos.
+  async function createClient() {
+    const c = newClient
+    setClientError('')
+    if (!c.nombre.trim() || !c.primerApellido.trim() || !c.correo.trim() || !c.password) return setClientError('Completá nombre, apellido, correo y contraseña.')
+    if (c.password.length < 8 || !/[A-Z]/.test(c.password) || !/[a-z]/.test(c.password) || !/[0-9]/.test(c.password)) return setClientError('La contraseña debe tener 8 caracteres, con mayúscula, minúscula y número.')
+    setSavingClient(true)
+    try {
+      // El registro suele devolver el usuario creado; usamos su id (respaldo por correo).
+      const createdResponse = await api.create<Client | { data?: Client }>('/usuarios/registro', { nombre: c.nombre.trim(), primerApellido: c.primerApellido.trim(), correo: c.correo.trim(), telefono: c.telefono || null, password: c.password })
+      const createdId = unwrap(createdResponse)?.id
+      const refreshed = unwrap(await api.list<Client[] | { data: Client[] }>('/usuarios?rol=Cliente')) || []
+      setClients(refreshed)
+      const targetId = createdId ?? refreshed.find(item => item.correo === c.correo.trim())?.id
+      // Se difiere la selección a un efecto: garantiza que el nuevo cliente ya
+      // esté en la lista del <Select> antes de marcarlo como elegido.
+      if (targetId) setPendingClientId(targetId)
+      setNewClientOpen(false)
+      setNewClient({ nombre: '', primerApellido: '', correo: '', telefono: '', password: '' })
+    } catch (cause) { setClientError(messageFrom(cause)) } finally { setSavingClient(false) }
+  }
 
   useEffect(() => {
     Promise.all([api.list<Service[] | { data: Service[] }>('/servicios/activos'), api.list<Additional[] | { data: Additional[] }>('/servicios-adicionales/activos'), api.list<Employee[] | { data: Employee[] }>('/empleados/activos'), api.list<Client[] | { data: Client[] }>('/usuarios?rol=Cliente')])
@@ -121,7 +152,12 @@ export function AppointmentForm({ appointment }: { appointment?: ExistingAppoint
   return <div className="appointment-builder"><form className="builder-form" onSubmit={submit}>
     <div className="form-section"><p className="eyebrow">Información principal</p><h2>Datos de la cita</h2>
       <div className="grid gap-2">
-        <Label>Cliente</Label>
+        <div className="flex items-center justify-between">
+          <Label>Cliente</Label>
+          <button type="button" onClick={() => { setClientError(''); setNewClientOpen(true) }} className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:text-brand-bright">
+            <UserPlus size={14} /> Nuevo cliente
+          </button>
+        </div>
         <Select value={clientId ? String(clientId) : ''} onValueChange={value => setClientId(Number(value))}>
           <SelectTrigger className="w-full"><SelectValue placeholder="Seleccioná un cliente" /></SelectTrigger>
           <SelectContent>{clients.map(item => <SelectItem key={item.id} value={String(item.id)}>{item.nombre} {item.primerApellido || ''}</SelectItem>)}</SelectContent>
@@ -168,5 +204,31 @@ export function AppointmentForm({ appointment }: { appointment?: ExistingAppoint
     {(error || localError) && <div className="form-error">{error || localError}</div>}
     <Button type="submit" disabled={!canSubmit} className="justify-self-start">{saving ? 'Guardando...' : editing ? 'Guardar cambios' : 'Guardar cita'}</Button>
   </form>
-  <aside className="appointment-summary"><p className="eyebrow">Resumen</p><h2>Detalle de la cita</h2><div className="summary-line"><span>Cliente</span><strong>{clients.find(item => item.id === clientId)?.nombre || 'Sin seleccionar'}</strong></div><div className="summary-line"><span>Servicio</span><strong>{service?.name || 'Sin seleccionar'}</strong></div><div className="summary-line"><span>Horario</span><strong>{start} - {summary.endTime}</strong></div><div className="summary-line"><span>Duración</span><strong>{summary.duration} minutos</strong></div><div className="summary-line"><span>Adicionales</span><strong>₡{summary.extraCost.toLocaleString('es-CR')}</strong></div><div className="summary-total"><span>Total estimado</span><strong>₡{summary.total.toLocaleString('es-CR')}</strong></div></aside></div>
+  <aside className="appointment-summary"><p className="eyebrow">Resumen</p><h2>Detalle de la cita</h2><div className="summary-line"><span>Cliente</span><strong>{clients.find(item => item.id === clientId)?.nombre || 'Sin seleccionar'}</strong></div><div className="summary-line"><span>Servicio</span><strong>{service?.name || 'Sin seleccionar'}</strong></div><div className="summary-line"><span>Horario</span><strong>{start} - {summary.endTime}</strong></div><div className="summary-line"><span>Duración</span><strong>{summary.duration} minutos</strong></div><div className="summary-line"><span>Adicionales</span><strong>₡{summary.extraCost.toLocaleString('es-CR')}</strong></div><div className="summary-total"><span>Total estimado</span><strong>₡{summary.total.toLocaleString('es-CR')}</strong></div></aside>
+
+  <Dialog open={newClientOpen} onOpenChange={setNewClientOpen}>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Nuevo cliente</DialogTitle>
+        <DialogDescription>Se registra como cliente y queda seleccionado en la cita.</DialogDescription>
+      </DialogHeader>
+      <div className="grid gap-4">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-2"><Label htmlFor="nc-nombre">Nombre *</Label><Input id="nc-nombre" value={newClient.nombre} onChange={e => updateNewClient('nombre', e.target.value)} /></div>
+          <div className="grid gap-2"><Label htmlFor="nc-apellido">Primer apellido *</Label><Input id="nc-apellido" value={newClient.primerApellido} onChange={e => updateNewClient('primerApellido', e.target.value)} /></div>
+        </div>
+        <div className="grid gap-2"><Label htmlFor="nc-correo">Correo electrónico *</Label><Input id="nc-correo" type="email" value={newClient.correo} onChange={e => updateNewClient('correo', e.target.value)} /></div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-2"><Label htmlFor="nc-tel">Teléfono</Label><Input id="nc-tel" value={newClient.telefono} onChange={e => updateNewClient('telefono', e.target.value)} /></div>
+          <div className="grid gap-2"><Label htmlFor="nc-pass">Contraseña *</Label><Input id="nc-pass" type="password" value={newClient.password} onChange={e => updateNewClient('password', e.target.value)} /></div>
+        </div>
+        {clientError && <div className="form-error">{clientError}</div>}
+      </div>
+      <DialogFooter>
+        <Button type="button" variant="secondary" onClick={() => setNewClientOpen(false)} disabled={savingClient}>Cancelar</Button>
+        <Button type="button" onClick={createClient} disabled={savingClient}>{savingClient ? 'Creando...' : 'Crear y seleccionar'}</Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+  </div>
 }
