@@ -194,14 +194,14 @@ tbody tr:nth-child(n+5){animation-delay:.12s}
 
 /* ---------- Tablas ---------- */
 .table-panel{overflow:auto}
-table{width:100%;border-collapse:collapse;text-align:left;font-size:13px;min-width:720px}
-th{background:var(--surface-2);color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;font-size:10px;font-weight:600}
-th,td{padding:15px 20px;border-bottom:1px solid var(--border-soft)}
-tbody tr{transition:background .12s}
-tbody tr:hover{background:var(--surface-2)}
-tr:last-child td{border-bottom:0}
-td{color:var(--text-dim)}
-td strong{color:var(--text)}
+.table-panel table{width:100%;border-collapse:collapse;text-align:left;font-size:13px;min-width:720px}
+.table-panel th{background:var(--surface-2);color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;font-size:10px;font-weight:600}
+.table-panel th,.table-panel td{padding:15px 20px;border-bottom:1px solid var(--border-soft)}
+.table-panel tbody tr{transition:background .12s}
+.table-panel tbody tr:hover{background:var(--surface-2)}
+.table-panel tr:last-child td{border-bottom:0}
+.table-panel td{color:var(--text-dim)}
+.table-panel td strong{color:var(--text)}
 .table-link{color:var(--text);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:12.5px}
 .table-link:hover{color:var(--brand)}
 .table-link strong{font-family:'JetBrains Mono',monospace;color:var(--text)}

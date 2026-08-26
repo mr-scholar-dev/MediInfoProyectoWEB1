@@ -14,6 +14,9 @@ const TONE: Record<string, string> = {
   Pendiente: "bg-warn-bg text-warn",
   Activo: "bg-ok-bg text-ok",
   Inactivo: "bg-surface-3 text-text-dim",
+  Disponible: "bg-ok-bg text-ok",
+  "Cita asignada": "bg-info-bg text-info",
+  Restricción: "bg-danger-bg text-danger",
 }
 
 export function StatusBadge({ status, className }: { status: string; className?: string }) {

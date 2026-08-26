@@ -5,6 +5,12 @@ import { useAuth } from '../../context/useAuth'
 import { api } from '../../services/api'
 import { calculateAppointment, type AdditionalOption, type ServiceOption } from './appointmentUtils'
 import { buildDaySegments, scheduleRangesForDate, validateAppointment, type ApiSchedule, type EmployeeAppointment, type EmployeeRestriction, type ScheduleRange } from './availability'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { StatusBadge } from '@/components/ui/status-badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import './appointment-form.css'
 
 type Service = { id: number; nombre: string; precioBase: number; duracionMinutos: number }
@@ -106,23 +112,53 @@ export function AppointmentForm({ appointment }: { appointment?: ExistingAppoint
   if (loading) return <div className="empty-state"><LoaderCircle className="spin" size={24} /><p>Cargando opciones del API...</p></div>
   return <div className="appointment-builder"><form className="builder-form" onSubmit={submit}>
     <div className="form-section"><p className="eyebrow">Información principal</p><h2>Datos de la cita</h2>
-      <label>Cliente<select required value={clientId ?? ''} onChange={event => setClientId(Number(event.target.value))}>{clients.map(item => <option key={item.id} value={item.id}>{item.nombre} {item.primerApellido || ''}</option>)}</select></label>
-      <label>Empleado<select required value={employeeId ?? ''} onChange={event => setEmployeeId(Number(event.target.value))}>{filteredEmployees.map(item => <option key={item.id} value={item.id}>{employeeName(item)}</option>)}</select></label>
+      <div className="grid gap-2">
+        <Label>Cliente</Label>
+        <Select value={clientId ? String(clientId) : ''} onValueChange={value => setClientId(Number(value))}>
+          <SelectTrigger className="w-full"><SelectValue placeholder="Seleccioná un cliente" /></SelectTrigger>
+          <SelectContent>{clients.map(item => <SelectItem key={item.id} value={String(item.id)}>{item.nombre} {item.primerApellido || ''}</SelectItem>)}</SelectContent>
+        </Select>
+      </div>
+      <div className="grid gap-2">
+        <Label>Empleado</Label>
+        <Select value={employeeId ? String(employeeId) : ''} onValueChange={value => setEmployeeId(Number(value))} disabled={filteredEmployees.length === 0}>
+          <SelectTrigger className="w-full"><SelectValue placeholder="Seleccioná un empleado" /></SelectTrigger>
+          <SelectContent>{filteredEmployees.map(item => <SelectItem key={item.id} value={String(item.id)}>{employeeName(item)}</SelectItem>)}</SelectContent>
+        </Select>
+      </div>
       {filteredEmployees.length === 0 && <div className="form-error">Ningún empleado activo tiene asignado el servicio seleccionado.</div>}
-      <div className="form-grid"><label>Fecha<div className="field-with-icon"><CalendarDays size={16} /><input required min={today} type="date" value={date} onChange={event => setDate(event.target.value)} /></div></label><label>Hora<div className="field-with-icon"><Clock3 size={16} /><input required type="time" value={start} onChange={event => setStart(event.target.value)} /></div></label></div>
-      <label>Observaciones<textarea value={notes} onChange={event => setNotes(event.target.value)} placeholder="Notas opcionales para la cita" /></label>
+      <div className="form-grid">
+        <div className="grid gap-2">
+          <Label htmlFor="cita-fecha">Fecha</Label>
+          <div className="relative">
+            <CalendarDays size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Input id="cita-fecha" required min={today} type="date" value={date} onChange={event => setDate(event.target.value)} className="pl-9 font-mono" />
+          </div>
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="cita-hora">Hora</Label>
+          <div className="relative">
+            <Clock3 size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Input id="cita-hora" required type="time" value={start} onChange={event => setStart(event.target.value)} className="pl-9 font-mono" />
+          </div>
+        </div>
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="cita-obs">Observaciones</Label>
+        <Textarea id="cita-obs" value={notes} onChange={event => setNotes(event.target.value)} placeholder="Notas opcionales para la cita" />
+      </div>
       {date && <div className={`availability-message ${localError ? 'unavailable' : availability?.disponible ? 'available' : availability ? 'unavailable' : ''}`}>{localError || availability?.motivo || 'Validando disponibilidad...'}</div>}
     </div>
     {employeeId && date && <div className="form-section"><p className="eyebrow">Agenda del día</p><h2>Disponibilidad del empleado</h2>
       {agendaLoading && <div className="agenda-loading"><LoaderCircle className="spin" size={16} /> Cargando agenda...</div>}
       {agendaError && <div className="form-error">{agendaError}</div>}
       {!agendaLoading && !agendaError && segments.length === 0 && <div className="agenda-empty">El establecimiento no atiende ese día.</div>}
-      {!agendaLoading && !agendaError && segments.length > 0 && <div className="table-panel agenda-table"><table><thead><tr><th>Inicio</th><th>Fin</th><th>Estado</th></tr></thead><tbody>{segments.map((segment, index) => <tr key={`${segment.start}-${index}`}><td>{segment.start}</td><td>{segment.end}</td><td><span className={`status ${segment.status === 'Disponible' ? 'status-green' : segment.status === 'Cita asignada' ? 'status-blue' : 'status-red'}`}>{segment.status}</span>{segment.detail && <small className="segment-detail">{segment.detail}</small>}</td></tr>)}</tbody></table></div>}
+      {!agendaLoading && !agendaError && segments.length > 0 && <div className="table-panel agenda-table"><table><thead><tr><th>Inicio</th><th>Fin</th><th>Estado</th></tr></thead><tbody>{segments.map((segment, index) => <tr key={`${segment.start}-${index}`}><td>{segment.start}</td><td>{segment.end}</td><td><StatusBadge status={segment.status} />{segment.detail && <small className="segment-detail">{segment.detail}</small>}</td></tr>)}</tbody></table></div>}
     </div>}
     <div className="form-section"><p className="eyebrow">Servicio principal</p><h2>Elegí un servicio</h2><div className="option-list">{services.map(item => <button type="button" className={`option-card ${serviceId === item.id ? 'selected' : ''}`} onClick={() => setServiceId(item.id)} key={item.id}><span><strong>{item.name}</strong><small>{item.duration} minutos</small></span><b>₡{item.price.toLocaleString('es-CR')}</b>{serviceId === item.id && <Check size={16} />}</button>)}</div></div>
     <div className="form-section"><p className="eyebrow">Opcional</p><h2>Servicios adicionales</h2><div className="option-list">{extras.map(item => <button type="button" className={`option-card ${extraIds.includes(item.id) ? 'selected' : ''}`} onClick={() => toggle(item.id)} key={item.id}><span><strong>{item.name}</strong><small>No modifica la duración</small></span><b>+ ₡{item.price.toLocaleString('es-CR')}</b>{extraIds.includes(item.id) && <Check size={16} />}</button>)}</div></div>
     {(error || localError) && <div className="form-error">{error || localError}</div>}
-    <button className="primary-button" disabled={!canSubmit}>{saving ? 'Guardando...' : editing ? 'Guardar cambios' : 'Guardar cita'}</button>
+    <Button type="submit" disabled={!canSubmit} className="justify-self-start">{saving ? 'Guardando...' : editing ? 'Guardar cambios' : 'Guardar cita'}</Button>
   </form>
   <aside className="appointment-summary"><p className="eyebrow">Resumen</p><h2>Detalle de la cita</h2><div className="summary-line"><span>Cliente</span><strong>{clients.find(item => item.id === clientId)?.nombre || 'Sin seleccionar'}</strong></div><div className="summary-line"><span>Servicio</span><strong>{service?.name || 'Sin seleccionar'}</strong></div><div className="summary-line"><span>Horario</span><strong>{start} - {summary.endTime}</strong></div><div className="summary-line"><span>Duración</span><strong>{summary.duration} minutos</strong></div><div className="summary-line"><span>Adicionales</span><strong>₡{summary.extraCost.toLocaleString('es-CR')}</strong></div><div className="summary-total"><span>Total estimado</span><strong>₡{summary.total.toLocaleString('es-CR')}</strong></div></aside></div>
 }

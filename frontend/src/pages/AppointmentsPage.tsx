@@ -5,6 +5,10 @@ import { useAuth } from '../context/useAuth'
 import { formatShortToday } from '../lib/date'
 import { api } from '../services/api'
 import { StatusBadge } from '@/components/ui/status-badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import './detail.css'
 
 type Appointment = { id: number; fecha: string; horaInicio: string; empleadoId?: number; cliente?: { nombre: string; primerApellido?: string }; servicio?: { nombre: string }; empleado?: { id?: number; usuario?: { nombre?: string; primerApellido?: string } }; estadoCita?: { nombre: string } }
@@ -43,5 +47,78 @@ export function AppointmentsPage() {
     if (sort === 'cliente') sorted.sort((a, b) => clientName(a).localeCompare(clientName(b), 'es'))
     return sorted
   }, [items, query, sort])
-  return <section className="page-shell"><div className="section-heading"><div><p className="eyebrow">Operación diaria</p><h1>Citas</h1><p className="lead">{user?.rol === 'Empleado' ? 'Consultá las citas que tenés asignadas.' : 'Consultá y administrá las citas del establecimiento.'}</p></div>{user?.rol !== 'Cliente' && <Link className="primary-button" to="/citas/nueva"><Plus size={18} /> Nueva cita</Link>}</div><div className="toolbar"><div className="search-control"><Search size={17} /><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Buscar cliente o servicio..." /></div><label className="sort-control">Ordenar por<select value={sort} onChange={event => setSort(event.target.value as SortOption)}><option value="recientes">Fecha (recientes primero)</option><option value="antiguas">Fecha (antiguas primero)</option><option value="estado">Estado</option><option value="cliente">Cliente</option></select></label><span className="date-button"><CalendarDays size={16} /> {formatShortToday()}</span><span className="results-count">{filtered.length} registros</span></div>{loading && <div className="empty-state"><LoaderCircle className="spin" size={24} /><p>Cargando citas...</p></div>}{error && <div className="empty-state"><h2>No se pudieron cargar las citas</h2><p>{error}</p></div>}{!loading && !error && filtered.length === 0 && <div className="empty-state"><h2>{items.length ? 'No hay coincidencias' : 'No hay citas registradas'}</h2><p>{items.length ? 'Probá con otro término de búsqueda.' : 'Cuando se creen citas desde el sistema aparecerán aquí.'}</p></div>}{!loading && !error && filtered.length > 0 && <div className="table-panel"><table><thead><tr><th>Fecha</th><th>Hora</th><th>Cliente</th><th>Servicio</th><th>Empleado</th><th>Estado</th></tr></thead><tbody>{filtered.map(item => { const status = item.estadoCita?.nombre || 'Pendiente'; return <tr key={item.id}><td><Link className="table-link" to={`/citas/${item.id}`}>{item.fecha}</Link></td><td><Link className="table-link" to={`/citas/${item.id}`}><strong>{item.horaInicio}</strong></Link></td><td>{clientName(item) || 'Sin cliente'}</td><td>{item.servicio?.nombre || 'Sin servicio'}</td><td>{item.empleado?.usuario ? `${item.empleado.usuario.nombre || ''} ${item.empleado.usuario.primerApellido || ''}`.trim() : 'Sin empleado'}</td><td><StatusBadge status={status} /></td></tr>})}</tbody></table></div>}<Link className="back-link" to="/">← Volver al resumen</Link></section>
+  return (
+    <section className="page-shell">
+      <div className="section-heading">
+        <div>
+          <p className="eyebrow">Operación diaria</p>
+          <h1>Citas</h1>
+          <p className="lead">{user?.rol === 'Empleado' ? 'Consultá las citas que tenés asignadas.' : 'Consultá y administrá las citas del establecimiento.'}</p>
+        </div>
+        {user?.rol !== 'Cliente' && (
+          <Button asChild>
+            <Link to="/citas/nueva"><Plus size={18} /> Nueva cita</Link>
+          </Button>
+        )}
+      </div>
+      <div className="flex flex-wrap items-center gap-3 mb-[18px]">
+        <div className="relative flex-1 min-w-[220px] max-w-[340px]">
+          <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Input value={query} onChange={event => setQuery(event.target.value)} placeholder="Buscar cliente o servicio..." className="pl-9" />
+        </div>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span className="hidden sm:inline">Ordenar por</span>
+          <Select value={sort} onValueChange={value => setSort(value as SortOption)}>
+            <SelectTrigger className="w-[210px]" size="sm"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="recientes">Fecha (recientes primero)</SelectItem>
+              <SelectItem value="antiguas">Fecha (antiguas primero)</SelectItem>
+              <SelectItem value="estado">Estado</SelectItem>
+              <SelectItem value="cliente">Cliente</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface-2 px-3 py-2 font-mono text-xs text-muted-foreground">
+          <CalendarDays size={16} /> {formatShortToday()}
+        </span>
+        <span className="ml-auto font-mono text-xs text-text-faint">{filtered.length} registros</span>
+      </div>
+      {loading && <div className="empty-state"><LoaderCircle className="spin" size={24} /><p>Cargando citas...</p></div>}
+      {error && <div className="empty-state"><h2>No se pudieron cargar las citas</h2><p>{error}</p></div>}
+      {!loading && !error && filtered.length === 0 && <div className="empty-state"><h2>{items.length ? 'No hay coincidencias' : 'No hay citas registradas'}</h2><p>{items.length ? 'Probá con otro término de búsqueda.' : 'Cuando se creen citas desde el sistema aparecerán aquí.'}</p></div>}
+      {!loading && !error && filtered.length > 0 && (
+        <div className="rounded-xl border border-border bg-card shadow-[var(--shadow-panel)]">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead>Fecha</TableHead>
+                <TableHead>Hora</TableHead>
+                <TableHead>Cliente</TableHead>
+                <TableHead>Servicio</TableHead>
+                <TableHead>Empleado</TableHead>
+                <TableHead>Estado</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.map(item => {
+                const status = item.estadoCita?.nombre || 'Pendiente'
+                const empleado = item.empleado?.usuario ? `${item.empleado.usuario.nombre || ''} ${item.empleado.usuario.primerApellido || ''}`.trim() : 'Sin empleado'
+                return (
+                  <TableRow key={item.id}>
+                    <TableCell><Link className="table-link" to={`/citas/${item.id}`}>{item.fecha}</Link></TableCell>
+                    <TableCell><Link className="table-link" to={`/citas/${item.id}`}><strong>{item.horaInicio}</strong></Link></TableCell>
+                    <TableCell className="text-foreground">{clientName(item) || 'Sin cliente'}</TableCell>
+                    <TableCell>{item.servicio?.nombre || 'Sin servicio'}</TableCell>
+                    <TableCell>{empleado}</TableCell>
+                    <TableCell><StatusBadge status={status} /></TableCell>
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+      <Link className="back-link" to="/">← Volver al resumen</Link>
+    </section>
+  )
 }
