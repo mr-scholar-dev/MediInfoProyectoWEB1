@@ -1,2 +1,5 @@
 .DS_Store
 assets/.DS_Store
+
+# Configuración local de la herramienta (no versionar)
+.claude/
