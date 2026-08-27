@@ -106,3 +106,4 @@ export function EmployeeDetailPage() {
     </section>
   )
 }
+// Muestra el detalle, servicios y agenda de un empleado.

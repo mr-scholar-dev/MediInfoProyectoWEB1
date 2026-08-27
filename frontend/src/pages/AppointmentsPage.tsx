@@ -123,3 +123,4 @@ export function AppointmentsPage() {
     </section>
   )
 }
+// Lista, busca y ordena las citas según el rol del usuario.

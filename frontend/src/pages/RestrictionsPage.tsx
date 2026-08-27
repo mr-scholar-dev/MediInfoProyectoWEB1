@@ -1,3 +1,4 @@
 import { CatalogPage } from '../modules/catalog/CatalogPage'
 type Restriction = { id: number; fecha: string; horaInicio?: string; horaFin?: string; motivo: string; empleado?: { usuario?: { nombre?: string } }; tipoRestriccion?: { nombre: string } }
 export function RestrictionsPage() { return <CatalogPage<Restriction> title="Restricciones" eyebrow="Disponibilidad" description="Consultá los bloqueos generales y específicos del establecimiento." endpoint="/restricciones-horario" detailBasePath="/restricciones" empty="No hay restricciones registradas" columns={[{ label: 'Fecha', render: x => x.fecha }, { label: 'Horario', render: x => `${x.horaInicio || 'Todo el día'}${x.horaFin ? ` - ${x.horaFin}` : ''}` }, { label: 'Aplica a', render: x => x.empleado?.usuario?.nombre ? `${x.empleado.usuario.nombre} (empleado)` : 'Establecimiento' }, { label: 'Motivo', render: x => x.motivo }]} /> }
+// Lista las restricciones de horario configuradas.

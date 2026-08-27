@@ -1,3 +1,5 @@
+// Componente genérico para listar cualquier catálogo de solo lectura.
+// Recibe columnas, endpoint y textos para reutilizar la misma interfaz.
 import { Eye, LoaderCircle, Search } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -9,11 +11,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 export type CatalogColumn<T> = { label: string; render: (item: T) => React.ReactNode }
 export type CatalogSortOption<T> = { label: string; compare: (a: T, b: T) => number }
+// Props genéricas: T representa el tipo de registro del catálogo.
 type Props<T extends { id: number }> = { title: string; eyebrow: string; description: string; endpoint: string; columns: CatalogColumn<T>[]; empty: string; detailBasePath?: string; createPath?: string; searchText?: (item: T) => string; sortOptions?: CatalogSortOption<T>[] }
 function unwrap<T>(value: T | { data?: T }): T { return (value && typeof value === 'object' && 'data' in value ? value.data : value) as T }
 function nameOf(item: unknown): string { const record = item as Record<string, unknown>; return String(record.nombre ?? record.titulo ?? record.title ?? record.name ?? '') }
 
 export function CatalogPage<T extends { id: number }>({ title, eyebrow, description, endpoint, columns, empty, detailBasePath, createPath, searchText, sortOptions }: Props<T>) {
+  // Estado local de datos, búsqueda, ordenamiento, carga y errores.
   const [items, setItems] = useState<T[]>([]); const [query, setQuery] = useState(''); const [loading, setLoading] = useState(true); const [error, setError] = useState(''); const [sortIndex, setSortIndex] = useState(0)
   const sorters = useMemo<CatalogSortOption<T>[]>(() => sortOptions ?? [
     { label: 'Nombre (A-Z)', compare: (a, b) => nameOf(a).localeCompare(nameOf(b), 'es') },

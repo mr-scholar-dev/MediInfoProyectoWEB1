@@ -67,3 +67,4 @@ export function LoginPage() {
     </main>
   )
 }
+// Pantalla pública para iniciar sesión.

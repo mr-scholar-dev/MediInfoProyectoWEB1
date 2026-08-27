@@ -50,3 +50,4 @@ export function NewServicePage() {
     </section>
   )
 }
+// Formulario para crear un servicio con imagen.

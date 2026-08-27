@@ -75,3 +75,4 @@ export function RegisterPage() {
     </main>
   )
 }
+// Formulario público para registrar nuevos clientes.

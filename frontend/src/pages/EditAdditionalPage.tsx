@@ -15,3 +15,4 @@ export function EditAdditionalPage() {
   if (!item) return <div className="empty-state"><LoaderCircle className="spin" size={24} /><p>Cargando adicional...</p></div>
   return <section className="page-shell narrow-page"><p className="eyebrow">Catálogo</p><h1>Editar adicional</h1><AdditionalForm initial={item} edit /><Link className="back-link" to={`/adicionales/${item.id}`}>← Cancelar</Link></section>
 }
+// Formulario para editar un servicio adicional.

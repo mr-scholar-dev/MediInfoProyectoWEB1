@@ -77,3 +77,4 @@ export function ServiceDetailPage() {
     </section>
   )
 }
+// Muestra el detalle de un servicio principal.

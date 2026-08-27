@@ -1,3 +1,4 @@
 import { CatalogPage } from '../modules/catalog/CatalogPage'
 type Schedule = { id: number; diaSemana?: { nombre: string }; horaInicio: string; horaFin: string; activo?: boolean }
 export function SchedulesPage() { return <CatalogPage<Schedule> title="Horarios de atención" eyebrow="Configuración" description="Consultá el horario general del establecimiento." endpoint="/horarios-atencion" detailBasePath="/horarios" empty="No hay horarios registrados" columns={[{ label: 'Día', render: x => x.diaSemana?.nombre || 'Sin día' }, { label: 'Inicio', render: x => x.horaInicio }, { label: 'Fin', render: x => x.horaFin }, { label: 'Estado', render: x => <span className="status status-green">{x.activo === false ? 'Inactivo' : 'Activo'}</span> }]} /> }
+// Lista los horarios de atención del establecimiento.

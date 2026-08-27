@@ -1,3 +1,4 @@
+// Agenda diaria: combina horarios, citas y restricciones para mostrar disponibilidad.
 import { CalendarDays, LoaderCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
@@ -13,6 +14,7 @@ type EmployeeAgenda = { empleado: ApiAgendaEmployee; citas: ApiAppointment[]; re
 type Schedule = { id: number; diaSemana?: { id?: number; nombre?: string }; horaInicio: string; horaFin: string; activo?: boolean }
 
 function employeeName(employee: ApiAgendaEmployee) { return `${employee.usuario?.nombre || 'Empleado'} ${employee.usuario?.primerApellido || ''}`.trim() }
+// Convierte HH:mm a minutos para poder comparar horas matemáticamente.
 const toMinutes = (time: string) => { const [hours, minutes] = time.split(':').map(Number); return hours * 60 + minutes }
 // Nombres normalizados (sin acentos) de los días, alineados con Date.getDay().
 const dayNames = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado']
@@ -37,6 +39,7 @@ function buildHours(schedule: Schedule) {
   return slots
 }
 function mapData(employees: ApiAgendaEmployee[], globalRestrictions: ApiRestriction[]) {
+  // Adapta la respuesta del API al formato que utiliza AgendaGrid.
   const mappedEmployees: AgendaEmployee[] = employees.map(employee => ({ id: employee.id, name: employeeName(employee) }))
   // Ordena las citas cronológicamente para que cada columna se lea en orden.
   const items: AgendaItem[] = employees.flatMap(employee => employee.citas.map(item => ({ id: item.id, employeeId: item.empleadoId || employee.id, start: item.horaInicio, end: item.horaFin, client: item.cliente ? `${item.cliente.nombre} ${item.cliente.primerApellido || ''}`.trim() : 'Sin cliente', service: item.servicio?.nombre || 'Sin servicio', status: item.estadoCita?.nombre || 'Pendiente' }))).sort((a, b) => toMinutes(a.start) - toMinutes(b.start))
@@ -45,15 +48,18 @@ function mapData(employees: ApiAgendaEmployee[], globalRestrictions: ApiRestrict
 }
 
 export function AgendaPage() {
+  // La fecha y el empleado seleccionado determinan qué agenda se consulta.
   const [searchParams] = useSearchParams(); const employeeFilter = Number(searchParams.get('empleado')) || undefined; const [date, setDate] = useState(new Date().toISOString().slice(0, 10)); const [employees, setEmployees] = useState<AgendaEmployee[]>([]); const [items, setItems] = useState<AgendaItem[]>([]); const [restrictions, setRestrictions] = useState<AgendaRestriction[]>([]); const [schedules, setSchedules] = useState<Schedule[]>([]); const [loading, setLoading] = useState(true); const [error, setError] = useState('')
   useEffect(() => {
     // Reinicia el spinner en cada cambio de fecha o filtro.
     setLoading(true); setError('')
     const endpoint = employeeFilter ? `/empleados/${employeeFilter}/agenda?fecha=${date}` : `/citas/agenda-diaria?fecha=${date}`
     const agendaRequest = employeeFilter ? api.get<EmployeeAgenda>(endpoint).then(result => mapData([{ ...result.empleado, id: employeeFilter, citas: result.citas, restricciones: result.restricciones }], [])) : api.get<DailyAgenda>(endpoint).then(result => mapData(result.empleados || [], result.restriccionesGenerales || []))
+    // Promise.all espera la agenda y los horarios antes de dibujar la vista.
     Promise.all([agendaRequest, api.get<Schedule[]>('/horarios-atencion')]).then(([result, scheduleList]) => { setEmployees(result.mappedEmployees); setItems(result.items); setRestrictions(result.restrictions); setSchedules(scheduleList || []) }).catch(cause => setError(cause instanceof Error ? cause.message : 'No se pudo cargar la agenda.')).finally(() => setLoading(false))
   }, [date, employeeFilter])
   const visibleEmployees = employeeFilter ? employees.filter(employee => employee.id === employeeFilter) : employees; const visibleItems = employeeFilter ? items.filter(item => item.employeeId === employeeFilter) : items; const visibleRestrictions = employeeFilter ? restrictions.filter(item => !item.employeeId || item.employeeId === employeeFilter) : restrictions
   const daySchedule = findDaySchedule(schedules, date); const hours = daySchedule ? buildHours(daySchedule) : []
   return <section className="page-shell"><div className="section-heading"><div><p className="eyebrow">Planificación</p><h1>Agenda diaria</h1><p className="lead">Visualizá la disponibilidad real {employeeFilter ? 'del empleado seleccionado' : 'por empleado'}.</p></div><label className="date-picker"><CalendarDays size={16} /><input type="date" value={date} onChange={event => setDate(event.target.value)} /></label></div><div className="legend"><span><i className="legend-dot free" />Disponible</span><span><i className="legend-dot busy" />Cita asignada</span><span><i className="legend-dot restricted" />Restricción</span></div>{loading && <div className="empty-state"><LoaderCircle className="spin" size={24} /><p>Cargando agenda...</p></div>}{error && <div className="empty-state"><h2>No se pudo cargar la agenda</h2><p>{error}</p></div>}{!loading && !error && !daySchedule && <div className="empty-state"><h2>Sin atención</h2><p>El establecimiento no atiende este día.</p></div>}{!loading && !error && daySchedule && visibleEmployees.length === 0 && <div className="empty-state"><h2>No hay empleados disponibles</h2><p>El API no devolvió empleados activos para esta fecha.</p></div>}{!loading && !error && daySchedule && visibleEmployees.length > 0 && <AgendaGrid employees={visibleEmployees} items={visibleItems} restrictions={visibleRestrictions} hours={hours} />}</section>
 }
+// Presenta la agenda diaria con citas y restricciones.

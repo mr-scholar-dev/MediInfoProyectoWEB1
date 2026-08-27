@@ -116,3 +116,4 @@ export function AppointmentDetailPage() {
     </section>
   )
 }
+// Muestra el detalle y las acciones permitidas de una cita.

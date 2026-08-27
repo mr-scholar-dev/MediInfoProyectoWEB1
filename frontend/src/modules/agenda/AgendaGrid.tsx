@@ -1,3 +1,4 @@
+// AgendaGrid dibuja la cuadrícula de horas, empleados, citas y restricciones.
 import { CalendarClock } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'

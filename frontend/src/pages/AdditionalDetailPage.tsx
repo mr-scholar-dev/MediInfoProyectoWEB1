@@ -54,3 +54,4 @@ export function AdditionalDetailPage() {
     </section>
   )
 }
+// Muestra el detalle de un servicio adicional.

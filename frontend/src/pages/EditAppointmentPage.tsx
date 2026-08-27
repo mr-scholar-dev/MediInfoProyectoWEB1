@@ -21,3 +21,4 @@ export function EditAppointmentPage() {
   if (status === 'Finalizada' || status === 'Cancelada') return <section className="page-shell"><Link className="back-link" to={`/citas/${item.id}`}><ArrowLeft size={14} /> Volver al detalle</Link><div className="empty-state"><h2>Esta cita no se puede editar</h2><p>Las citas en estado {status} no admiten modificaciones.</p></div></section>
   return <section className="page-shell"><Link className="back-link" to={`/citas/${item.id}`}><ArrowLeft size={14} /> Volver al detalle</Link><div className="section-heading"><div><p className="eyebrow">Edición</p><h1>Editar cita</h1><p className="lead">Podés cambiar fecha, horario, servicio y adicionales. La disponibilidad se valida antes de guardar.</p></div></div><AppointmentForm appointment={item} /></section>
 }
+// Formulario para editar una cita existente.
