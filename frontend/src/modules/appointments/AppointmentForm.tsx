@@ -1,3 +1,5 @@
+// Formulario reutilizable para crear y editar citas.
+// Consulta datos del API, calcula costo/duración y valida disponibilidad.
 import { CalendarDays, Check, Clock3, LoaderCircle } from 'lucide-react'
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'

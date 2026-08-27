@@ -1,3 +1,4 @@
+// Carga una cita existente y reutiliza el formulario para editarla.
 import { ArrowLeft, LoaderCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'

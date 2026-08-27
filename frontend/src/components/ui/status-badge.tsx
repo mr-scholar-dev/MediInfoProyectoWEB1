@@ -1,3 +1,4 @@
+// StatusBadge traduce estados del API a etiquetas con colores consistentes.
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 

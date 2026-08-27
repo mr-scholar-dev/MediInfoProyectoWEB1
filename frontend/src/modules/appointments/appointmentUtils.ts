@@ -1,3 +1,4 @@
+// Funciones puras para calcular horarios, costos y duración de una cita.
 export type ServiceOption = { id: number; name: string; price: number; duration: number }
 export type AdditionalOption = { id: number; name: string; price: number }
 // Suma minutos a una hora HH:mm.

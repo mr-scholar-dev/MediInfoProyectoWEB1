@@ -1,5 +1,6 @@
 "use client"
 
+// Dialog construye ventanas modales reutilizando los componentes accesibles de Radix.
 import * as React from "react"
 import { XIcon } from "lucide-react"
 import { Dialog as DialogPrimitive } from "radix-ui"

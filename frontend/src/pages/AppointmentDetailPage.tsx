@@ -1,3 +1,4 @@
+// Muestra el detalle de una cita y permite cambiar su estado o cancelarla.
 import { ArrowLeft, Edit3, LoaderCircle, XCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'

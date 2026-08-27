@@ -1,3 +1,4 @@
+// Checkbox representa una opción que puede estar marcada o desmarcada.
 import * as React from "react"
 import { CheckIcon } from "lucide-react"
 import { Checkbox as CheckboxPrimitive } from "radix-ui"

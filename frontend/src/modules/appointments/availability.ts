@@ -1,3 +1,4 @@
+// Reglas locales para detectar cruces entre citas, horarios y restricciones.
 export type TimeRange = { start: string; end: string; status: 'Disponible' | 'Ocupada' | 'Restricción' }
 export function toMinutes(time: string) { const [hours, minutes] = time.split(':').map(Number); return hours * 60 + minutes }
 // Dos intervalos chocan si se cruzan en cualquier punto.

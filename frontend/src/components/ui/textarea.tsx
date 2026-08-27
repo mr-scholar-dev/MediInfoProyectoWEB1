@@ -1,3 +1,4 @@
+// Textarea es un campo reutilizable para textos largos o descripciones.
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

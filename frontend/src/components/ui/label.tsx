@@ -1,3 +1,4 @@
+// Label identifica un campo de formulario y mejora su accesibilidad.
 import * as React from "react"
 import { Label as LabelPrimitive } from "radix-ui"
 

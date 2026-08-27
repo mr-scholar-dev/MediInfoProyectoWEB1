@@ -1,3 +1,4 @@
+// Input es un campo de entrada reutilizable para formularios.
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

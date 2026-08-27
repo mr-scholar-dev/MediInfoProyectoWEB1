@@ -1,3 +1,4 @@
+// Lista las citas permitidas para el usuario y permite buscarlas u ordenarlas.
 import { CalendarDays, LoaderCircle, Plus, Search } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'

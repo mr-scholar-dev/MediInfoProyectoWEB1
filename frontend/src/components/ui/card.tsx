@@ -1,3 +1,4 @@
+// Card agrupa contenido visual en una superficie con borde, espacio y sombra.
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
